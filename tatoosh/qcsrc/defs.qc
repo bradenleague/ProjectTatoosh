@@ -576,6 +576,8 @@ float		teamplay;
 							// weapon or takes damage.  Used to alert
 							// monsters that otherwise would let the player go
 .float		jump_flag;		// player jump flag
+.float		land_recovery_time;
+.float		land_speed_scale;
 .float		swim_flag;		// player swimming sound flag
 .float		air_finished;	// when time > air_finished, start drowning
 .float		bubble_count;	// keeps track of the number of bubbles

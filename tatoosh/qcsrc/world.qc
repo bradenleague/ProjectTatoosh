@@ -196,7 +196,15 @@ void() worldspawn =
 	if (self.model == "maps/e1m8.bsp" || self.model == "maps/lq_e1m8.bsp")
 		cvar_set ("sv_gravity", "100");
 	else
-		cvar_set ("sv_gravity", "800");
+		cvar_set ("sv_gravity", "680");
+
+	// Baseline movement feel
+	cvar_set ("sv_maxspeed", "240");
+	cvar_set ("sv_friction", "5.5");
+	cvar_set ("sv_accelerate", "8");
+	cvar_set ("sv_airaccelerate", "7");
+	cvar_set ("sv_stopspeed", "100");
+	cvar_set ("sv_aim", "0.93");
 
 	// the area based ambient sounds MUST be the first precache_sounds
 

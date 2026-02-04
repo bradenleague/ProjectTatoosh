@@ -59,6 +59,9 @@ vkquake.pak
 # User-specific config
 config.cfg.local
 
+# Engine-saved config (vkQuake auto-saves to this file on exit)
+vkQuake.cfg
+
 # Claude Code local config
 .claude/
 

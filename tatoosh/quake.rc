@@ -1,8 +1,17 @@
 // Tatoosh - Startup Script
 // This runs when the mod loads
 
-// Execute default config
+// Load default bindings and settings from base game
+exec default.cfg
+
+// Load saved settings
 exec config.cfg
+
+// Load user customizations
+exec autoexec.cfg
+
+// Process command-line arguments
+stuffcmds
 
 // Print welcome message
 echo "======================================"
@@ -11,6 +20,12 @@ echo "  Version 0.1.0-dev"
 echo "======================================"
 echo ""
 
-// Start at main menu
+// Enable RmlUI for menus and HUD
 ui_use_rmlui_menus 1
+ui_use_rmlui_hud 1
+
+// Play background demos (provides world backdrop for main menu)
+startdemos demo1 demo2 demo3
+
+// Show the RmlUI main menu on top of the demo
 ui_show

@@ -68,6 +68,24 @@ std::vector<BoundInt> g_bound_ints;
 std::vector<BoundFloat> g_bound_floats;
 std::vector<BoundString> g_bound_strings;
 
+bool IsMenuDocumentPath(const std::string& path)
+{
+    return path.find("/menus/") != std::string::npos;
+}
+
+bool HasVisibleMenuDocument()
+{
+    for (const auto& pair : g_documents) {
+        if (!IsMenuDocumentPath(pair.first)) {
+            continue;
+        }
+        if (pair.second && pair.second->IsVisible()) {
+            return true;
+        }
+    }
+    return false;
+}
+
 // Convert SDL key to RmlUI key
 Rml::Input::KeyIdentifier TranslateKey(int sdl_key)
 {
@@ -461,6 +479,20 @@ void UI_ProcessPending(void)
             UI_ProcessPendingEscape();
         }
     }
+
+    // Reconcile menu state in case external systems changed key_dest or visibility.
+    if (HasVisibleMenuDocument()) {
+        if (g_input_mode != UI_INPUT_MENU_ACTIVE) {
+            UI_SetInputMode(UI_INPUT_MENU_ACTIVE);
+        }
+        if (key_dest != key_menu) {
+            IN_Deactivate(true);
+            key_dest = key_menu;
+        }
+        g_visible = true;
+    } else if (g_menu_stack.empty() && g_input_mode == UI_INPUT_MENU_ACTIVE) {
+        UI_SetInputMode(UI_INPUT_INACTIVE);
+    }
 }
 
 void UI_Update(double dt)
@@ -837,6 +869,10 @@ int UI_WantsMenuInput(void)
 
     // If the engine is in menu mode and the UI is visible, treat as active.
     if (g_visible && key_dest == key_menu) {
+        return 1;
+    }
+
+    if (HasVisibleMenuDocument()) {
         return 1;
     }
 

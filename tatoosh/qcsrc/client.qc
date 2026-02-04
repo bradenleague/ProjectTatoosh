@@ -617,6 +617,8 @@ void() PutClientInServer =
 	self.deadflag = DEAD_NO;
 	// pausetime is set by teleporters to keep the player from moving a while
 	self.pausetime = 0;
+	self.land_recovery_time = 0;
+	self.land_speed_scale = 1;
 
 	spot = SelectSpawnPoint ();
 
@@ -1001,7 +1003,7 @@ void() PlayerJump =
 
 #ifndef __QW__ // QW handles this movement code in the engine for client-side prediction
 	self.flags = self.flags - FL_ONGROUND;	// don't stairwalk
-	self.velocity_z = self.velocity_z + 270;
+	self.velocity_z = self.velocity_z + cvar("sv_jumpbase");
 #endif
 
 };
@@ -1188,6 +1190,27 @@ void() PlayerPreThink =
 	// teleporters can force a non-moving pause time
 	if (time < self.pausetime)
 		self.velocity = '0 0 0';
+
+	// Landing recovery — cap horizontal speed after landing
+	if (time < self.land_recovery_time)
+	{
+		local vector hvel;
+		local float hspeed, max_land_speed;
+		hvel_x = self.velocity_x;
+		hvel_y = self.velocity_y;
+		hvel_z = 0;
+		hspeed = vlen(hvel);
+		max_land_speed = cvar("sv_maxspeed") * self.land_speed_scale;
+		if (hspeed > max_land_speed && hspeed > 0)
+		{
+			local float ratio;
+			ratio = max_land_speed / hspeed;
+			self.velocity_x = self.velocity_x * ratio;
+			self.velocity_y = self.velocity_y * ratio;
+		}
+	}
+	else if (self.land_speed_scale != 1)
+		self.land_speed_scale = 1;
 
 	if(time > self.attack_finished && self.currentammo == 0 && self.weapon != IT_AXE)
 	{
@@ -1403,17 +1426,22 @@ void() PlayerPostThink =
 	{
 		if (self.watertype == CONTENT_WATER)
 			sound (self, CHAN_BODY, "player/h2ojump.wav", 1, ATTN_NORM);
-
 		else if (self.jump_flag < -650)
 		{
-			self.deathtype = "falling"; // Moved up so it happens before damage	// ZungryWare
+			// Hard landing — heavy stun
+			self.deathtype = "falling";
 			T_Damage (self, world, world, 5);
 			sound (self, CHAN_VOICE, "player/land2.wav", 1, ATTN_NORM);
+			self.land_speed_scale = 0.5;
+			self.land_recovery_time = time + 0.4;
 		}
-
 		else
+		{
+			// Soft landing
 			sound (self, CHAN_VOICE, "player/land.wav", 1, ATTN_NORM);
-
+			self.land_speed_scale = 0.85;
+			self.land_recovery_time = time + 0.15;
+		}
 		self.jump_flag = 0;
 	}
 

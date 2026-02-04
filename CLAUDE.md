@@ -19,28 +19,20 @@ brew install cmake meson ninja sdl2 molten-vk vulkan-headers glslang freetype
 ### Build Everything
 ```bash
 make          # Build RmlUI libs + engine
-make run      # Build and run
+make run      # Build, assemble game/, and run
 make engine   # Rebuild just the engine
 make libs     # Rebuild just RmlUI + UI library
-make clean    # Clean all build artifacts
+make assemble # Set up game/ runtime directory (symlinks + assets)
+make clean    # Clean all build artifacts (including game/)
 make setup    # Re-run meson setup for engine
-```
-
-### Manual Build Steps
-```bash
-# 1. Build RmlUI and UI integration library
-cmake -B build
-cmake --build build
-
-# 2. Build the engine
-cd engine
-meson setup build
-meson compile -C build
 ```
 
 ### Run the Game
 ```bash
-./engine/build/vkquake -basedir external/librequake
+make run
+# or manually:
+make && make assemble
+./engine/build/vkquake -basedir game -game tatoosh
 ```
 
 ### Compile QuakeC (gameplay code)
@@ -88,9 +80,16 @@ Custom Vulkan-based UI integration with 15 source files:
 - `rcss/` - 5 RCSS stylesheets (CSS-like)
 - `fonts/` - TTF font files
 
-### Mod Assets (`tatoosh/`)
+### Runtime Directory (`game/`)
 
-Game asset overrides (textures, maps, sounds, compiled QuakeC).
+Assembled at build time by `make assemble`, gitignored. Contains:
+- `game/id1/` — symlink to `external/librequake/lq1/` (base assets, read-only)
+- `game/tatoosh/` — real directory with symlinks to source configs + copied `progs.dat`
+- Engine writes `vkQuake.cfg` into `game/tatoosh/`, never into the source tree
+
+### Mod Sources (`tatoosh/`)
+
+QuakeC source and game configs (source of truth, symlinked into `game/`).
 
 ## Console Commands
 

@@ -14,4 +14,10 @@ cd "$PROJECT_ROOT/tatoosh/qcsrc"
 echo "Compiling QuakeC..."
 "$PROJECT_ROOT/tools/fteqcc"
 
-echo "Done! Run with: ./engine/build/vkquake -basedir external/librequake -game tatoosh"
+# Copy to runtime game directory if assembled
+if [ -d "$PROJECT_ROOT/game/tatoosh" ]; then
+    cp "$PROJECT_ROOT/tatoosh/progs.dat" "$PROJECT_ROOT/game/tatoosh/progs.dat"
+    echo "Copied progs.dat to game/tatoosh/"
+fi
+
+echo "Done! Run with: make run"

@@ -1,3 +1,6 @@
+# Runtime game directory (assembled from LibreQuake + tatoosh sources)
+game/
+
 # Build directories
 build/
 build_*/
@@ -37,11 +40,12 @@ progs.dat
 meson-*
 subprojects/
 
-# CMake
+# CMake (generated Makefiles, not our top-level one)
 CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
 Makefile
+!/Makefile
 
 # SPIR-V compiled shaders
 *.spv

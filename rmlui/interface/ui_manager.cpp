@@ -27,8 +27,10 @@ extern "C" {
     extern double realtime;  // vkQuake's time reference
     void Con_Printf(const char* fmt, ...);
     void IN_Activate(void);
+    void IN_Deactivate(int clear);
     extern int key_dest;
     #define key_game 0
+    #define key_menu 2
 }
 
 namespace {
@@ -833,17 +835,6 @@ int UI_WantsMenuInput(void)
         return 0;
     }
 
-    // If we're about to close all menus, report that we don't want input
-    // so the engine can transition to game mode immediately
-    if (g_pending_close_all) {
-        return 0;
-    }
-
-    // If escape is pending and this will close the last menu, report no input wanted
-    if (g_pending_escape && g_menu_stack.size() <= 1) {
-        return 0;
-    }
-
     // Menu stack is the source of truth for menu input.
     if (!g_menu_stack.empty()) {
         return 1;
@@ -887,6 +878,10 @@ void UI_PushMenu(const char* path)
 {
     if (!g_initialized || !g_context || !path) return;
 
+    // Cancel any pending close requests since we're explicitly opening a menu.
+    g_pending_escape = false;
+    g_pending_close_all = false;
+
     // Load document if not already loaded
     auto it = g_documents.find(path);
     if (it == g_documents.end() || !it->second) {
@@ -923,6 +918,12 @@ void UI_PushMenu(const char* path)
 
     // Set menu mode
     UI_SetInputMode(UI_INPUT_MENU_ACTIVE);
+
+    // Ensure input is routed to menu when a menu is pushed.
+    if (key_dest != key_menu) {
+        IN_Deactivate(true);
+        key_dest = key_menu;
+    }
 
     // Record open time to prevent immediate close from same key event
     g_menu_open_time = realtime;

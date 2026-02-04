@@ -12,4 +12,5 @@ echo "======================================"
 echo ""
 
 // Start at main menu
-// menu_main
+ui_use_rmlui_menus 1
+ui_show

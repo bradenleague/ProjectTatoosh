@@ -1,0 +1,31 @@
+<rml>
+<head>
+    <title>Level Complete</title>
+    <link type="text/rcss" href="../../rcss/base.rcss"/>
+    <link type="text/rcss" href="../../rcss/hud.rcss"/>
+</head>
+<body data-model="game">
+
+    <div class="intermission-overlay">
+        <h1 class="intermission-title">{{ level_name }}</h1>
+
+        <div class="intermission-stats">
+            <div class="intermission-stat">
+                <span class="intermission-stat-label">Monsters</span>
+                <span class="intermission-stat-value">{{ monsters }} / {{ total_monsters }}</span>
+            </div>
+            <div class="intermission-stat">
+                <span class="intermission-stat-label">Secrets</span>
+                <span class="intermission-stat-value">{{ secrets }} / {{ total_secrets }}</span>
+            </div>
+            <div class="intermission-stat">
+                <span class="intermission-stat-label">Time</span>
+                <span class="intermission-stat-value intermission-time">{{ time_minutes }}:{{ time_seconds }}</span>
+            </div>
+        </div>
+
+        <div class="intermission-continue">Press any key to continue...</div>
+    </div>
+
+</body>
+</rml>

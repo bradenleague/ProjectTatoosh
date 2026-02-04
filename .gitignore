@@ -1,0 +1,70 @@
+# Build directories
+build/
+build_*/
+cmake-build-*/
+out/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Compiled binaries
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+vkquake
+quakespasm
+
+# Tools (downloaded/built separately — see README for setup)
+tools/
+
+# Compiled assets
+*.pak
+*.pk3
+progs.dat
+*.bsp
+*.lit
+
+# Meson
+.ninja_*
+meson-*
+subprojects/
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# SPIR-V compiled shaders
+*.spv
+
+# Generated files
+*.c.spv
+embedded_pak.c
+vkquake.pak
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# User-specific config
+config.cfg.local
+
+# Claude Code local config
+.claude/
+
+# Debug files
+*.dSYM/
+*.pdb
+
+# Test output
+test_results/

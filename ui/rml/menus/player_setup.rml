@@ -1,0 +1,50 @@
+<rml>
+<head>
+    <title>Player Setup</title>
+    <link type="text/rcss" href="../../rcss/base.rcss"/>
+    <link type="text/rcss" href="../../rcss/menu.rcss"/>
+    <link type="text/rcss" href="../../rcss/widgets.rcss"/>
+</head>
+<body data-model="cvars">
+
+    <div class="menu-overlay">
+        <div class="menu-container">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Player Setup</h2>
+                </div>
+
+                <div class="option-list">
+                    <div class="option-row">
+                        <span class="option-label">Name</span>
+                        <span class="option-value">Player</span>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <div class="section-header">Player Color</div>
+
+                    <div class="option-row clickable" onclick="cycle_cvar('_cl_color_top', 1)">
+                        <span class="option-label">Shirt Color</span>
+                        <span class="option-value">{{ _cl_color_top }}</span>
+                    </div>
+
+                    <div class="option-row clickable" onclick="cycle_cvar('_cl_color_bottom', 1)">
+                        <span class="option-label">Pants Color</span>
+                        <span class="option-value">{{ _cl_color_bottom }}</span>
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <div class="menu-nav">
+                    <button class="menu-item" onclick="close()">
+                        Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</rml>

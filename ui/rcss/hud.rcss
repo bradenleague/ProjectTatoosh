@@ -1,0 +1,592 @@
+/*
+ * Tatoosh - HUD Stylesheet
+ *
+ * BRUTAL & BOLD sci-fi aesthetic
+ * Clean, high-contrast, no-nonsense design
+ */
+
+/* ============================================
+   HUD Container (full screen overlay)
+   ============================================ */
+
+.hud-overlay {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    pointer-events: none;
+}
+
+.hud-interactive {
+    pointer-events: auto;
+}
+
+/* ============================================
+   HUD Positioning Utilities
+   ============================================ */
+
+.hud-top-left {
+    position: absolute;
+    top: 24dp;
+    left: 24dp;
+}
+
+.hud-top-center {
+    position: absolute;
+    top: 24dp;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.hud-top-right {
+    position: absolute;
+    top: 24dp;
+    right: 24dp;
+}
+
+.hud-center-left {
+    position: absolute;
+    top: 50%;
+    left: 24dp;
+    transform: translateY(-50%);
+}
+
+.hud-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.hud-center-right {
+    position: absolute;
+    top: 50%;
+    right: 24dp;
+    transform: translateY(-50%);
+}
+
+.hud-bottom-left {
+    position: absolute;
+    bottom: 24dp;
+    left: 24dp;
+}
+
+.hud-bottom-center {
+    position: absolute;
+    bottom: 24dp;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.hud-bottom-right {
+    position: absolute;
+    bottom: 24dp;
+    right: 24dp;
+}
+
+/* ============================================
+   Status Bar - BRUTAL MINIMAL
+   ============================================ */
+
+.status-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64dp;
+    background-color: rgba(0, 0, 0, 0.85);
+    border-top: 3dp #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32dp;
+}
+
+.status-bar-section {
+    display: flex;
+    align-items: center;
+    gap: 32dp;
+}
+
+/* ============================================
+   Stat Display - BOLD NUMBERS
+   ============================================ */
+
+.stat-display {
+    display: flex;
+    align-items: baseline;
+    gap: 12dp;
+}
+
+.stat-icon {
+    width: 32dp;
+    height: 32dp;
+}
+
+.stat-value {
+    font-size: 48dp;
+    font-weight: bold;
+    min-width: 80dp;
+    text-align: right;
+    font-effect: outline(2dp #000000);
+}
+
+.stat-label {
+    font-size: 14dp;
+    color: #666666;
+    text-transform: uppercase;
+    letter-spacing: 2dp;
+    font-weight: bold;
+}
+
+/* Health - RED */
+.stat-health .stat-value {
+    color: #ff0000;
+}
+
+.stat-health.low .stat-value {
+    color: #ff3333;
+    animation: pulse 0.4s ease-in-out infinite;
+}
+
+.stat-health.critical .stat-value {
+    color: #ff0000;
+    animation: blink 0.25s step-start infinite;
+}
+
+/* Armor - WHITE */
+.stat-armor .stat-value {
+    color: #ffffff;
+}
+
+.stat-armor.armor-green .stat-value {
+    color: #00ff00;
+}
+
+.stat-armor.armor-yellow .stat-value {
+    color: #ffff00;
+}
+
+.stat-armor.armor-red .stat-value {
+    color: #ff0000;
+}
+
+/* Ammo - YELLOW */
+.stat-ammo .stat-value {
+    color: #ffcc00;
+}
+
+.stat-ammo.low .stat-value {
+    color: #ff6600;
+    animation: pulse 0.6s ease-in-out infinite;
+}
+
+/* ============================================
+   Weapon Bar - BLOCKY SLOTS
+   ============================================ */
+
+.weapon-bar {
+    display: flex;
+    gap: 2dp;
+}
+
+.weapon-slot {
+    width: 40dp;
+    height: 40dp;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-width: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.weapon-slot.owned {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.weapon-slot.active {
+    background-color: #ffffff;
+}
+
+.weapon-slot-number {
+    font-size: 18dp;
+    font-weight: bold;
+    color: #333333;
+}
+
+.weapon-slot.owned .weapon-slot-number {
+    color: #888888;
+}
+
+.weapon-slot.active .weapon-slot-number {
+    color: #000000;
+}
+
+/* ============================================
+   Ammo Counts
+   ============================================ */
+
+.ammo-bar {
+    display: flex;
+    gap: 24dp;
+}
+
+.ammo-count {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ammo-count-icon {
+    width: 24dp;
+    height: 24dp;
+    margin-bottom: 4dp;
+}
+
+.ammo-count-value {
+    font-size: 18dp;
+    font-weight: bold;
+    color: #ffffff;
+    font-effect: outline(1dp #000000);
+}
+
+.ammo-count.shells .ammo-count-value { color: #cc9933; }
+.ammo-count.nails .ammo-count-value { color: #999999; }
+.ammo-count.rockets .ammo-count-value { color: #ff3300; }
+.ammo-count.cells .ammo-count-value { color: #00ccff; }
+
+/* ============================================
+   Keys and Powerups - BOLD ICONS
+   ============================================ */
+
+.items-bar {
+    display: flex;
+    gap: 8dp;
+}
+
+.item-icon {
+    width: 32dp;
+    height: 32dp;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-width: 0;
+    opacity: 0.2;
+}
+
+.item-icon.owned {
+    opacity: 1.0;
+    border: 2dp #ffffff;
+}
+
+/* Keys */
+.item-key-silver.owned {
+    background-color: #cccccc;
+}
+
+.item-key-gold.owned {
+    background-color: #ffcc00;
+}
+
+/* Powerups - GLOWING */
+.item-quad.owned {
+    background-color: #0066ff;
+    border: 2dp #00aaff;
+    animation: pulse 0.4s ease-in-out infinite;
+}
+
+.item-pent.owned {
+    background-color: #ff0000;
+    border: 2dp #ff6666;
+    animation: pulse 0.4s ease-in-out infinite;
+}
+
+.item-ring.owned {
+    background-color: #ffcc00;
+    border: 2dp #ffee66;
+    animation: pulse 0.6s ease-in-out infinite;
+}
+
+.item-suit.owned {
+    background-color: #00cc00;
+    border: 2dp #66ff66;
+}
+
+/* ============================================
+   Crosshair - MINIMAL
+   ============================================ */
+
+.crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.crosshair-dot {
+    width: 4dp;
+    height: 4dp;
+    background-color: #ffffff;
+}
+
+.crosshair-lines {
+    position: relative;
+    width: 32dp;
+    height: 32dp;
+}
+
+.crosshair-line {
+    position: absolute;
+    background-color: #ffffff;
+}
+
+.crosshair-line.horizontal {
+    width: 10dp;
+    height: 2dp;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.crosshair-line.horizontal.left {
+    left: 0;
+}
+
+.crosshair-line.horizontal.right {
+    right: 0;
+}
+
+.crosshair-line.vertical {
+    width: 2dp;
+    height: 10dp;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.crosshair-line.vertical.top {
+    top: 0;
+}
+
+.crosshair-line.vertical.bottom {
+    bottom: 0;
+}
+
+/* ============================================
+   Messages - STARK CONTRAST
+   ============================================ */
+
+.messages-area {
+    position: absolute;
+    top: 24dp;
+    left: 24dp;
+    width: 450dp;
+    font-size: 16dp;
+    color: #ffffff;
+}
+
+.message {
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 10dp 16dp;
+    margin-bottom: 4dp;
+    border-left: 4dp #ffffff;
+    animation: fade-in 0.15s ease-out;
+}
+
+.message.pickup {
+    border-left-color: #00ff00;
+    color: #00ff00;
+}
+
+.message.death {
+    border-left-color: #ff0000;
+    color: #ff0000;
+}
+
+/* ============================================
+   Level Stats
+   ============================================ */
+
+.level-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 6dp;
+    font-size: 14dp;
+}
+
+.level-stat {
+    display: flex;
+    justify-content: space-between;
+    gap: 16dp;
+}
+
+.level-stat-label {
+    color: #666666;
+    text-transform: uppercase;
+    letter-spacing: 1dp;
+}
+
+.level-stat-value {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* ============================================
+   Modern HUD Variant - CORNERS ONLY
+   ============================================ */
+
+.hud-modern .stat-display {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+}
+
+.hud-modern .stat-value {
+    font-size: 56dp;
+    line-height: 1em;
+}
+
+.hud-modern .stat-label {
+    font-size: 12dp;
+    margin-top: 4dp;
+}
+
+.hud-modern .status-bar {
+    background-color: transparent;
+    border-width: 0;
+    height: auto;
+    padding: 32dp;
+}
+
+/* ============================================
+   Intermission - FULL TAKEOVER
+   ============================================ */
+
+.intermission-overlay {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: fade-in 0.3s ease-out;
+}
+
+.intermission-title {
+    font-size: 72dp;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 48dp;
+    text-transform: uppercase;
+    letter-spacing: 8dp;
+}
+
+.intermission-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 12dp;
+    font-size: 28dp;
+    min-width: 400dp;
+}
+
+.intermission-stat {
+    display: flex;
+    justify-content: space-between;
+    padding: 12dp 0;
+    border-bottom: 2dp #333333;
+}
+
+.intermission-stat-label {
+    color: #666666;
+    text-transform: uppercase;
+    letter-spacing: 2dp;
+}
+
+.intermission-stat-value {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.intermission-time {
+    color: #ffcc00;
+}
+
+.intermission-continue {
+    margin-top: 64dp;
+    font-size: 18dp;
+    color: #666666;
+    text-transform: uppercase;
+    letter-spacing: 4dp;
+    animation: blink 1.2s step-start infinite;
+}
+
+/* ============================================
+   Scoreboard - CLEAN TABLE
+   ============================================ */
+
+.scoreboard-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.95);
+    border: 3dp #ffffff;
+    padding: 32dp;
+    min-width: 550dp;
+    animation: fade-in 0.1s ease-out;
+}
+
+.scoreboard-title {
+    text-align: center;
+    font-size: 28dp;
+    font-weight: bold;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 4dp;
+    margin-bottom: 24dp;
+    padding-bottom: 16dp;
+    border-bottom: 2dp #ffffff;
+}
+
+.scoreboard-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 12dp 16dp;
+    font-size: 14dp;
+    color: #666666;
+    text-transform: uppercase;
+    letter-spacing: 2dp;
+    border-bottom: 1dp #333333;
+}
+
+.scoreboard-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 14dp 16dp;
+    font-size: 18dp;
+    border-bottom: 1dp #222222;
+}
+
+.scoreboard-row:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.scoreboard-row.self {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-left: 4dp #ffffff;
+}
+
+.scoreboard-name {
+    color: #ffffff;
+    flex-grow: 1;
+}
+
+.scoreboard-frags {
+    color: #ffcc00;
+    font-weight: bold;
+    min-width: 80dp;
+    text-align: right;
+}
+
+.scoreboard-ping {
+    color: #666666;
+    min-width: 80dp;
+    text-align: right;
+}

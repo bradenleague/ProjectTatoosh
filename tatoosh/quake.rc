@@ -1,0 +1,15 @@
+// Tatoosh - Startup Script
+// This runs when the mod loads
+
+// Execute default config
+exec config.cfg
+
+// Print welcome message
+echo "======================================"
+echo "  PROJECT TATOOSH"
+echo "  Version 0.1.0-dev"
+echo "======================================"
+echo ""
+
+// Start at main menu
+// menu_main

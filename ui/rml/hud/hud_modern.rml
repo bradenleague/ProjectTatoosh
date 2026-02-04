@@ -1,0 +1,170 @@
+<rml>
+<head>
+    <title>Modern HUD</title>
+    <link type="text/rcss" href="../../rcss/base.rcss"/>
+    <link type="text/rcss" href="../../rcss/hud.rcss"/>
+    <style>
+        /* Corner stats - BRUTAL typography */
+        .corner-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 4dp;
+        }
+
+        .corner-stat {
+            display: flex;
+            align-items: baseline;
+            gap: 8dp;
+        }
+
+        .corner-stat .value {
+            font-size: 64dp;
+            font-weight: bold;
+            font-effect: outline(3dp #000000);
+            line-height: 1em;
+        }
+
+        .corner-stat .label {
+            font-size: 14dp;
+            text-transform: uppercase;
+            letter-spacing: 2dp;
+            color: #666666;
+            font-weight: bold;
+        }
+
+        .corner-stat.health .value { color: #ff0000; }
+        .corner-stat.armor .value { color: #ffffff; }
+        .corner-stat.ammo .value { color: #ffcc00; }
+
+        .corner-stat.low .value {
+            animation: pulse 0.4s ease-in-out infinite;
+        }
+
+        /* Crosshair - single dot */
+        .crosshair-minimal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 6dp;
+            height: 6dp;
+            margin-top: -3dp;
+            margin-left: -3dp;
+            background-color: #ffffff;
+        }
+
+        /* Keys - minimal squares */
+        .keys-row {
+            display: flex;
+            gap: 4dp;
+        }
+
+        .key-icon {
+            width: 24dp;
+            height: 24dp;
+            background-color: rgba(255, 255, 255, 0.1);
+            opacity: 0.2;
+        }
+
+        .key-icon.owned {
+            opacity: 1.0;
+            border: 2dp #ffffff;
+        }
+
+        .key-icon.silver.owned {
+            background-color: #cccccc;
+        }
+
+        .key-icon.gold.owned {
+            background-color: #ffcc00;
+        }
+
+        /* Powerups - bold indicators */
+        .powerups-row {
+            display: flex;
+            gap: 8dp;
+        }
+
+        .powerup-icon {
+            width: 36dp;
+            height: 36dp;
+            border: 2dp #ffffff;
+        }
+
+        .powerup-icon.quad {
+            background-color: #0066ff;
+            animation: pulse 0.4s ease-in-out infinite;
+        }
+
+        .powerup-icon.pent {
+            background-color: #ff0000;
+            animation: pulse 0.4s ease-in-out infinite;
+        }
+
+        .powerup-icon.ring {
+            background-color: #ffcc00;
+            animation: pulse 0.6s ease-in-out infinite;
+        }
+
+        .powerup-icon.suit {
+            background-color: #00cc00;
+        }
+
+        /* Level stats - understated */
+        .level-info {
+            font-size: 12dp;
+            color: #444444;
+            text-transform: uppercase;
+            letter-spacing: 1dp;
+        }
+
+        .level-info div {
+            margin-bottom: 4dp;
+        }
+    </style>
+</head>
+<body data-model="game" class="hud-overlay hud-modern">
+
+    <!-- Crosshair -->
+    <div class="crosshair-minimal"></div>
+
+    <!-- Health/Armor (bottom-left) -->
+    <div class="corner-stats hud-bottom-left">
+        <div class="corner-stat health" data-class-low="health < 25">
+            <span class="value">{{ health }}</span>
+            <span class="label">HP</span>
+        </div>
+        <div class="corner-stat armor" data-if="armor > 0">
+            <span class="value">{{ armor }}</span>
+            <span class="label">AR</span>
+        </div>
+    </div>
+
+    <!-- Ammo (bottom-right) -->
+    <div class="corner-stats hud-bottom-right" style="align-items: flex-end;">
+        <div class="corner-stat ammo" data-class-low="ammo < 10">
+            <span class="value">{{ ammo }}</span>
+        </div>
+    </div>
+
+    <!-- Keys (top-right) -->
+    <div class="keys-row hud-top-right">
+        <div class="key-icon silver" data-class-owned="has_key1"></div>
+        <div class="key-icon gold" data-class-owned="has_key2"></div>
+    </div>
+
+    <!-- Powerups (top-left, when active) -->
+    <div class="powerups-row hud-top-left">
+        <div class="powerup-icon quad" data-if="has_quad"></div>
+        <div class="powerup-icon pent" data-if="has_invulnerability"></div>
+        <div class="powerup-icon ring" data-if="has_invisibility"></div>
+        <div class="powerup-icon suit" data-if="has_suit"></div>
+    </div>
+
+    <!-- Level Stats (single player only) -->
+    <div class="level-info" data-if="!deathmatch" style="position: absolute; top: 72dp; left: 24dp;">
+        <div>{{ monsters }}/{{ total_monsters }} KILLS</div>
+        <div>{{ secrets }}/{{ total_secrets }} SECRETS</div>
+    </div>
+
+</body>
+</rml>

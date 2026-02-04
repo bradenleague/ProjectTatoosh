@@ -1,0 +1,581 @@
+/*
+ * Tatoosh - Menu Stylesheet
+ *
+ * Styles for menu screens: main menu, options, load/save, etc.
+ * Import after base.rcss.
+ */
+
+/* ============================================
+   Menu Container
+   ============================================ */
+
+.menu-overlay {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-container {
+    width: 500dp;
+    max-width: 90%;
+    max-height: 90%;
+    overflow: auto;
+    animation: fade-in 0.2s ease-out;
+    display: block;
+}
+
+.menu-container.wide {
+    width: 700dp;
+}
+
+.menu-container.narrow {
+    width: 350dp;
+}
+
+/* ============================================
+   Panel Styles
+   ============================================ */
+
+.panel {
+    background-color: rgba(12, 18, 28, 0.95);
+    border: 1dp #2a4060;
+    padding: 32dp;
+    width: 100%;
+    display: block;
+}
+
+.panel.main-panel {
+    background-color: rgba(10, 16, 26, 0.92);
+    border-color: #1e3450;
+    padding: 40dp 48dp;
+}
+
+.panel-dark {
+    background-color: rgba(8, 12, 20, 0.98);
+    border-color: #1a3050;
+}
+
+.panel-header {
+    background-color: rgba(20, 40, 70, 0.9);
+    border-bottom: 2dp #3060a0;
+    padding: 16dp 24dp;
+    margin: -32dp -32dp 24dp -32dp;
+    border-radius: 6dp 6dp 0 0;
+    display: block;
+}
+
+.panel-header h1 {
+    margin: 0;
+    font-size: 28dp;
+    color: #60c0ff;
+}
+
+.panel-header h2 {
+    margin: 0;
+    font-size: 22dp;
+    color: #4090e0;
+}
+
+.panel-footer {
+    background-color: rgba(15, 25, 40, 0.9);
+    border-top: 1dp #2a4060;
+    padding: 16dp 24dp;
+    margin: 24dp -32dp -32dp -32dp;
+    border-radius: 0 0 6dp 6dp;
+    display: block;
+}
+
+/* ============================================
+   Menu Title
+   ============================================ */
+
+.menu-title {
+    text-align: center;
+    margin-bottom: 40dp;
+}
+
+.menu-title h1,
+.menu-title .game-title {
+    font-size: 48dp;
+    color: #ffffff;
+    margin-bottom: 12dp;
+    letter-spacing: 8dp;
+    font-effect: glow(3dp rgba(96, 192, 255, 0.5));
+}
+
+.menu-subtitle {
+    font-size: 14dp;
+    color: #6888a8;
+    letter-spacing: 2dp;
+    text-transform: uppercase;
+}
+
+.menu-version {
+    font-size: 11dp;
+    color: #405060;
+}
+
+/* ============================================
+   Menu Footer
+   ============================================ */
+
+.menu-footer {
+    margin-top: 32dp;
+    padding-top: 20dp;
+    text-align: center;
+}
+
+.menu-footer .menu-version {
+    margin-top: 16dp;
+}
+
+/* ============================================
+   Menu Navigation
+   ============================================ */
+
+.menu-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10dp;
+}
+
+.menu-item {
+    display: block;
+    background-color: rgba(25, 40, 60, 0.5);
+    border: 1dp #2a4060;
+    padding: 16dp 24dp;
+    color: #b0c4d8;
+    font-size: 16dp;
+    text-align: center;
+    cursor: pointer;
+    letter-spacing: 1dp;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.menu-item:hover {
+    background-color: rgba(40, 70, 110, 0.7);
+    border-color: #4080c0;
+    color: #ffffff;
+}
+
+.menu-item:active {
+    background-color: rgba(50, 90, 140, 0.85);
+    border-color: #60a0e0;
+}
+
+.menu-item:disabled {
+    background-color: rgba(20, 30, 45, 0.4);
+    border-color: #1a2535;
+    color: #4a5a6a;
+    cursor: default;
+}
+
+.menu-item:disabled:hover {
+    background-color: rgba(20, 30, 45, 0.4);
+    border-color: #1a2535;
+    color: #4a5a6a;
+}
+
+/* Primary menu item (highlighted action) */
+.menu-item.primary {
+    background-color: rgba(40, 100, 160, 0.7);
+    border-color: #4090d0;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 17dp;
+}
+
+.menu-item.primary:hover {
+    background-color: rgba(50, 120, 190, 0.85);
+    border-color: #60b0f0;
+}
+
+/* Secondary menu item (less prominent) */
+.menu-item.secondary {
+    background-color: rgba(20, 30, 45, 0.4);
+    border-color: #1e3348;
+    color: #7890a8;
+    font-size: 14dp;
+    padding: 12dp 20dp;
+}
+
+.menu-item.secondary:hover {
+    background-color: rgba(30, 45, 65, 0.5);
+    border-color: #2a4560;
+    color: #a0b8d0;
+}
+
+/* Danger menu item (quit, delete) */
+.menu-item.danger {
+    background-color: rgba(100, 30, 30, 0.6);
+    border-color: #703030;
+}
+
+.menu-item.danger:hover {
+    background-color: rgba(140, 40, 40, 0.75);
+    border-color: #c04040;
+}
+
+/* ============================================
+   Option Rows (for settings menus)
+   ============================================ */
+
+.option-list {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4dp;
+    width: 100%;
+}
+
+.option-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10dp 12dp;
+    background-color: rgba(20, 35, 55, 0.5);
+    border-radius: 3dp;
+    width: 100%;
+}
+
+.option-label {
+    flex: 0 0 220dp;
+    color: #c0d0e0;
+    font-size: 16dp;
+}
+
+/* Ensure range inputs have a usable hit area inside option rows. */
+.option-row input.range {
+    display: block;
+    width: 260dp;
+    min-width: 200dp;
+    margin-left: 16dp;
+    flex: 1 1 260dp;
+    cursor: pointer;
+}
+
+.option-row:hover {
+    background-color: rgba(25, 45, 70, 0.6);
+}
+
+.option-value {
+    color: #60c0ff;
+    font-size: 16dp;
+    min-width: 120dp;
+    text-align: right;
+}
+
+/* Clickable option row for cycling values */
+.option-row.clickable {
+    cursor: pointer;
+}
+
+.option-row.clickable:hover .option-value {
+    color: #80d0ff;
+}
+
+/* ============================================
+   Section Dividers
+   ============================================ */
+
+.section-divider {
+    height: 1dp;
+    background-color: #2a4060;
+    margin: 20dp 0;
+}
+
+.section-header {
+    font-size: 14dp;
+    font-weight: bold;
+    color: #6090c0;
+    text-transform: uppercase;
+    letter-spacing: 1dp;
+    margin-top: 24dp;
+    margin-bottom: 12dp;
+    padding-bottom: 8dp;
+    border-bottom: 1dp #2a4060;
+}
+
+/* ============================================
+   Dialog/Modal Styles
+   ============================================ */
+
+.dialog {
+    width: 100%;
+    text-align: center;
+}
+
+.dialog-message {
+    font-size: 18dp;
+    color: #d0e0f0;
+    margin-bottom: 24dp;
+    line-height: 1.5;
+}
+
+.dialog-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16dp;
+}
+
+.dialog-buttons .menu-item {
+    min-width: 100dp;
+}
+
+/* ============================================
+   Key Binding Styles
+   ============================================ */
+
+.keybind-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10dp 12dp;
+    background-color: rgba(20, 35, 55, 0.5);
+    border-radius: 3dp;
+    cursor: pointer;
+    width: 100%;
+}
+
+.keybind-row:hover {
+    background-color: rgba(25, 45, 70, 0.6);
+}
+
+.keybind-action {
+    color: #c0d0e0;
+    font-size: 15dp;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.keybind-key {
+    font-family: LatoLatin;
+    font-size: 14dp;
+    color: #60c0ff;
+    background-color: rgba(40, 70, 110, 0.6);
+    border: 1dp #3060a0;
+    border-radius: 3dp;
+    padding: 4dp 12dp;
+    min-width: 80dp;
+    text-align: center;
+    flex: 0 0 140dp;
+}
+
+.keybind-row:hover .keybind-key {
+    border-color: #4080c0;
+    background-color: rgba(50, 90, 140, 0.7);
+}
+
+.keybind-row.capturing .keybind-key {
+    background-color: rgba(80, 120, 180, 0.9);
+    border-color: #60a0e0;
+    color: #ffffff;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+/* ============================================
+   Save/Load Slot Styles
+   ============================================ */
+
+.save-slot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12dp 16dp;
+    background-color: rgba(20, 35, 55, 0.5);
+    border: 1dp #2a4060;
+    border-radius: 4dp;
+    cursor: pointer;
+}
+
+.save-slot:hover {
+    background-color: rgba(30, 50, 80, 0.6);
+    border-color: #3a5080;
+}
+
+.save-slot-info {
+    flex-grow: 1;
+}
+
+.save-slot-name {
+    font-size: 16dp;
+    color: #d0e0f0;
+    margin-bottom: 4dp;
+}
+
+.save-slot-details {
+    font-size: 12dp;
+    color: #6080a0;
+}
+
+.save-slot-empty {
+    color: #506070;
+    font-style: italic;
+}
+
+.save-slot-thumbnail {
+    width: 80dp;
+    height: 60dp;
+    background-color: rgba(10, 20, 30, 0.8);
+    border: 1dp #2a4060;
+    border-radius: 2dp;
+    margin-left: 12dp;
+}
+
+/* ============================================
+   Back/Navigation Button
+   ============================================ */
+
+.back-button {
+    position: absolute;
+    top: 24dp;
+    left: 24dp;
+    font-size: 14dp;
+    padding: 8dp 16dp;
+    background-color: rgba(30, 50, 80, 0.6);
+    border: 1dp #2a4060;
+    border-radius: 3dp;
+    color: #a0b0c0;
+    cursor: pointer;
+}
+
+.back-button:hover {
+    background-color: rgba(40, 70, 110, 0.7);
+    border-color: #3a5080;
+    color: #c0d0e0;
+}
+
+/* ============================================
+   Scrollable Content Area
+   ============================================ */
+
+.scroll-area {
+    max-height: 400dp;
+    overflow-y: auto;
+    padding-right: 8dp;
+    width: 100%;
+    display: block;
+}
+
+/* Scrollbar styling */
+.scroll-area scrollbarvertical {
+    width: 10dp;
+    margin-left: 4dp;
+}
+
+.scroll-area scrollbarvertical slidertrack {
+    background-color: rgba(20, 35, 55, 0.6);
+    border-radius: 5dp;
+}
+
+.scroll-area scrollbarvertical sliderbar {
+    background-color: rgba(60, 100, 150, 0.7);
+    border-radius: 5dp;
+    min-height: 30dp;
+}
+
+.scroll-area scrollbarvertical sliderbar:hover {
+    background-color: rgba(80, 130, 180, 0.8);
+}
+
+/* ============================================
+   Main Menu (Simplified)
+   ============================================ */
+
+.menu-body {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.main-menu-panel {
+    width: 400dp;
+    margin-top: 100dp;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 40dp;
+    padding-bottom: 40dp;
+    padding-left: 48dp;
+    padding-right: 48dp;
+    background-color: rgba(10, 16, 26, 0.95);
+    border-width: 1dp;
+    border-color: #1e3450;
+    text-align: center;
+}
+
+.main-menu-title {
+    font-size: 48dp;
+    color: #ffffff;
+    margin-bottom: 8dp;
+    letter-spacing: 6dp;
+}
+
+.main-menu-subtitle {
+    font-size: 13dp;
+    color: #607890;
+    letter-spacing: 1dp;
+    margin-bottom: 40dp;
+}
+
+.main-menu-buttons {
+    margin-bottom: 32dp;
+}
+
+.menu-btn {
+    display: block;
+    background-color: rgba(25, 40, 60, 0.6);
+    border-width: 1dp;
+    border-color: #2a4060;
+    padding-top: 14dp;
+    padding-bottom: 14dp;
+    padding-left: 24dp;
+    padding-right: 24dp;
+    margin-bottom: 8dp;
+    color: #b0c4d8;
+    font-size: 16dp;
+    cursor: pointer;
+}
+
+.menu-btn:hover {
+    background-color: rgba(40, 70, 110, 0.7);
+    border-color: #4080c0;
+    color: #ffffff;
+}
+
+.menu-btn:active {
+    background-color: rgba(50, 90, 140, 0.8);
+}
+
+.menu-btn.primary {
+    background-color: rgba(40, 100, 160, 0.7);
+    border-color: #4090d0;
+    color: #ffffff;
+    font-size: 17dp;
+}
+
+.menu-btn.primary:hover {
+    background-color: rgba(50, 120, 190, 0.85);
+    border-color: #60b0f0;
+}
+
+.menu-btn.quit {
+    margin-top: 16dp;
+    background-color: rgba(20, 30, 45, 0.5);
+    border-color: #1e3348;
+    color: #708090;
+    font-size: 14dp;
+}
+
+.menu-btn.quit:hover {
+    background-color: rgba(80, 40, 40, 0.6);
+    border-color: #804040;
+    color: #c0a0a0;
+}
+
+.main-menu-version {
+    font-size: 11dp;
+    color: #405060;
+    margin-top: 0;
+    margin-bottom: 0;
+}

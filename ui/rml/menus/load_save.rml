@@ -1,0 +1,82 @@
+<rml>
+<head>
+    <title>Load/Save Game</title>
+    <link type="text/rcss" href="../../rcss/base.rcss"/>
+    <link type="text/rcss" href="../../rcss/menu.rcss"/>
+    <link type="text/rcss" href="../../rcss/widgets.rcss"/>
+</head>
+<body>
+
+    <div class="menu-overlay">
+        <div class="menu-container wide">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Load / Save Game</h2>
+                </div>
+
+                <div class="scroll-area">
+                    <div class="option-list">
+                        <!-- Quick Save/Load -->
+                        <div class="save-slot" onclick="load_game('quick')">
+                            <div class="save-slot-info">
+                                <div class="save-slot-name">Quick Save</div>
+                                <div class="save-slot-details">Press F6 to quick save, F9 to quick load</div>
+                            </div>
+                        </div>
+
+                        <div class="section-divider"></div>
+
+                        <!-- Save Slots -->
+                        <div class="save-slot" onclick="load_game('s0')">
+                            <div class="save-slot-info">
+                                <div class="save-slot-name">Slot 1</div>
+                                <div class="save-slot-details save-slot-empty">Empty</div>
+                            </div>
+                        </div>
+
+                        <div class="save-slot" onclick="load_game('s1')">
+                            <div class="save-slot-info">
+                                <div class="save-slot-name">Slot 2</div>
+                                <div class="save-slot-details save-slot-empty">Empty</div>
+                            </div>
+                        </div>
+
+                        <div class="save-slot" onclick="load_game('s2')">
+                            <div class="save-slot-info">
+                                <div class="save-slot-name">Slot 3</div>
+                                <div class="save-slot-details save-slot-empty">Empty</div>
+                            </div>
+                        </div>
+
+                        <div class="save-slot" onclick="load_game('s3')">
+                            <div class="save-slot-info">
+                                <div class="save-slot-name">Slot 4</div>
+                                <div class="save-slot-details save-slot-empty">Empty</div>
+                            </div>
+                        </div>
+
+                        <div class="save-slot" onclick="load_game('s4')">
+                            <div class="save-slot-info">
+                                <div class="save-slot-name">Slot 5</div>
+                                <div class="save-slot-details save-slot-empty">Empty</div>
+                            </div>
+                        </div>
+
+                        <div class="save-slot" onclick="load_game('s5')">
+                            <div class="save-slot-info">
+                                <div class="save-slot-name">Slot 6</div>
+                                <div class="save-slot-details save-slot-empty">Empty</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-footer">
+                    <button class="btn" onclick="close()">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</rml>

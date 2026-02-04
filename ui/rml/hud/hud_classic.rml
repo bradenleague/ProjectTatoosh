@@ -1,0 +1,227 @@
+<rml>
+<head>
+    <title>Classic HUD</title>
+    <link type="text/rcss" href="../../rcss/base.rcss"/>
+    <link type="text/rcss" href="../../rcss/hud.rcss"/>
+    <style>
+        /* Override status bar for classic full-width look */
+        .status-bar {
+            height: 72dp;
+            background-color: rgba(0, 0, 0, 0.95);
+            border-top: 0;
+        }
+
+        /* Weapon bar above status */
+        .weapon-row {
+            position: absolute;
+            bottom: 80dp;
+            left: 24dp;
+            display: flex;
+            gap: 2dp;
+        }
+
+        .weapon-slot {
+            width: 44dp;
+            height: 44dp;
+            background-color: rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .weapon-slot.owned {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .weapon-slot.active {
+            background-color: #ffffff;
+        }
+
+        .weapon-num {
+            font-size: 20dp;
+            font-weight: bold;
+            color: #333333;
+        }
+
+        .weapon-slot.owned .weapon-num {
+            color: #888888;
+        }
+
+        .weapon-slot.active .weapon-num {
+            color: #000000;
+        }
+
+        /* Ammo counts above status */
+        .ammo-row {
+            position: absolute;
+            bottom: 80dp;
+            right: 24dp;
+            display: flex;
+            gap: 20dp;
+        }
+
+        .ammo-type {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .ammo-type .count {
+            font-size: 20dp;
+            font-weight: bold;
+            font-effect: outline(1dp #000000);
+        }
+
+        .ammo-type.shells .count { color: #cc9933; }
+        .ammo-type.nails .count { color: #999999; }
+        .ammo-type.rockets .count { color: #ff3300; }
+        .ammo-type.cells .count { color: #00ccff; }
+
+        /* Items row */
+        .items-row {
+            position: absolute;
+            bottom: 132dp;
+            right: 24dp;
+            display: flex;
+            gap: 6dp;
+        }
+
+        .item-box {
+            width: 28dp;
+            height: 28dp;
+            background-color: rgba(255, 255, 255, 0.1);
+            opacity: 0.2;
+        }
+
+        .item-box.owned {
+            opacity: 1.0;
+            border: 2dp #ffffff;
+        }
+
+        .item-box.key-silver.owned { background-color: #cccccc; }
+        .item-box.key-gold.owned { background-color: #ffcc00; }
+        .item-box.quad.owned {
+            background-color: #0066ff;
+            animation: pulse 0.4s ease-in-out infinite;
+        }
+        .item-box.pent.owned {
+            background-color: #ff0000;
+            animation: pulse 0.4s ease-in-out infinite;
+        }
+        .item-box.ring.owned {
+            background-color: #ffcc00;
+            animation: pulse 0.6s ease-in-out infinite;
+        }
+        .item-box.suit.owned {
+            background-color: #00cc00;
+        }
+    </style>
+</head>
+<body data-model="game" class="hud-overlay">
+
+    <!-- Messages Area (top-left) -->
+    <div class="messages-area hud-top-left">
+        <!-- Messages populated dynamically -->
+    </div>
+
+    <!-- Level Stats (top-right, single player) -->
+    <div class="level-stats hud-top-right" data-if="!deathmatch">
+        <div class="level-stat">
+            <span class="level-stat-label">KILLS</span>
+            <span class="level-stat-value">{{ monsters }}/{{ total_monsters }}</span>
+        </div>
+        <div class="level-stat">
+            <span class="level-stat-label">SECRETS</span>
+            <span class="level-stat-value">{{ secrets }}/{{ total_secrets }}</span>
+        </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <!-- Armor -->
+        <div class="status-bar-section">
+            <div class="stat-display stat-armor"
+                 data-class-armor-green="armor_type == 1"
+                 data-class-armor-yellow="armor_type == 2"
+                 data-class-armor-red="armor_type == 3">
+                <span class="stat-value">{{ armor }}</span>
+                <span class="stat-label">AR</span>
+            </div>
+        </div>
+
+        <!-- Health -->
+        <div class="status-bar-section">
+            <div class="stat-display stat-health"
+                 data-class-low="health < 40"
+                 data-class-critical="health < 25">
+                <span class="stat-value">{{ health }}</span>
+                <span class="stat-label">HP</span>
+            </div>
+        </div>
+
+        <!-- Ammo -->
+        <div class="status-bar-section">
+            <div class="stat-display stat-ammo"
+                 data-class-low="ammo < 10">
+                <span class="stat-value">{{ ammo }}</span>
+                <span class="stat-label">AM</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Weapon Bar -->
+    <div class="weapon-row">
+        <div class="weapon-slot owned" data-class-active="active_weapon == 4096">
+            <span class="weapon-num">1</span>
+        </div>
+        <div class="weapon-slot" data-class-owned="has_shotgun" data-class-active="active_weapon == 1">
+            <span class="weapon-num">2</span>
+        </div>
+        <div class="weapon-slot" data-class-owned="has_super_shotgun" data-class-active="active_weapon == 2">
+            <span class="weapon-num">3</span>
+        </div>
+        <div class="weapon-slot" data-class-owned="has_nailgun" data-class-active="active_weapon == 4">
+            <span class="weapon-num">4</span>
+        </div>
+        <div class="weapon-slot" data-class-owned="has_super_nailgun" data-class-active="active_weapon == 8">
+            <span class="weapon-num">5</span>
+        </div>
+        <div class="weapon-slot" data-class-owned="has_grenade_launcher" data-class-active="active_weapon == 16">
+            <span class="weapon-num">6</span>
+        </div>
+        <div class="weapon-slot" data-class-owned="has_rocket_launcher" data-class-active="active_weapon == 32">
+            <span class="weapon-num">7</span>
+        </div>
+        <div class="weapon-slot" data-class-owned="has_lightning_gun" data-class-active="active_weapon == 64">
+            <span class="weapon-num">8</span>
+        </div>
+    </div>
+
+    <!-- Ammo Counts -->
+    <div class="ammo-row">
+        <div class="ammo-type shells">
+            <span class="count">{{ shells }}</span>
+        </div>
+        <div class="ammo-type nails">
+            <span class="count">{{ nails }}</span>
+        </div>
+        <div class="ammo-type rockets">
+            <span class="count">{{ rockets }}</span>
+        </div>
+        <div class="ammo-type cells">
+            <span class="count">{{ cells }}</span>
+        </div>
+    </div>
+
+    <!-- Keys and Powerups -->
+    <div class="items-row">
+        <div class="item-box key-silver" data-class-owned="has_key1"></div>
+        <div class="item-box key-gold" data-class-owned="has_key2"></div>
+        <div class="item-box quad" data-class-owned="has_quad"></div>
+        <div class="item-box pent" data-class-owned="has_invulnerability"></div>
+        <div class="item-box ring" data-class-owned="has_invisibility"></div>
+        <div class="item-box suit" data-class-owned="has_suit"></div>
+    </div>
+
+</body>
+</rml>

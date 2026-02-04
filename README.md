@@ -1,5 +1,11 @@
 # Project Tatoosh
 
+<p align="center">
+  <img width="600"
+       src="https://github.com/user-attachments/assets/489b35a4-bbca-4cb3-b55c-6483a5deafaa" />
+</p>
+
+
 Built on [vkQuake](https://github.com/Novum/vkQuake) (Vulkan renderer), [RmlUI](https://github.com/mikke89/RmlUi) (HTML/CSS UI), and [LibreQuake](https://github.com/lavenderdotpet/LibreQuake) (BSD-licensed base assets).
 
 ## Getting Started
@@ -41,6 +47,11 @@ Other targets:
 | `make engine` | Build only the engine |
 | `make setup` | Re-run meson setup for the engine |
 | `make clean` | Remove all build artifacts |
+
+<p align="center">
+  <img width="600"
+       src="https://github.com/user-attachments/assets/fccf44b6-feac-4438-a05e-ca6b4172ca7e" />
+</p>
 
 ## Asset Compilation (optional)
 

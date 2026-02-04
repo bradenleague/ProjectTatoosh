@@ -835,6 +835,11 @@ int UI_WantsMenuInput(void)
         return 0;
     }
 
+    // If the engine is in menu mode and the UI is visible, treat as active.
+    if (g_visible && key_dest == key_menu) {
+        return 1;
+    }
+
     // Menu stack is the source of truth for menu input.
     if (!g_menu_stack.empty()) {
         return 1;

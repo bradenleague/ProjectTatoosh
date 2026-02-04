@@ -45,6 +45,7 @@ void UI_HideDocument(const char *path);
 void UI_SetVisible(int visible);
 int UI_IsVisible(void);
 void UI_Toggle(void);
+int UI_IsMenuVisible(void);
 
 /* Data binding - connect QuakeC globals to UI elements */
 void UI_BindInt(const char *name, int *value);

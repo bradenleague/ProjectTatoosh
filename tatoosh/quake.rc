@@ -10,6 +10,10 @@ exec config.cfg
 // Load user customizations
 exec autoexec.cfg
 
+// Sprint
+alias +sprint "impulse 20"
+alias -sprint "impulse 21"
+
 // Process command-line arguments
 stuffcmds
 

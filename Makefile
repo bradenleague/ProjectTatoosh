@@ -32,8 +32,8 @@ engine/build/vkquake: libs $(wildcard engine/Quake/*.c) $(wildcard engine/Quake/
 assemble:
 	@mkdir -p $(GAMEDIR)/tatoosh
 	@test -L $(GAMEDIR)/id1 || ln -s ../external/librequake/lq1 $(GAMEDIR)/id1
-	@test -L $(GAMEDIR)/tatoosh/quake.rc || ln -s ../../tatoosh/quake.rc $(GAMEDIR)/tatoosh/quake.rc
-	@test -L $(GAMEDIR)/tatoosh/config.cfg || ln -s ../../tatoosh/config.cfg $(GAMEDIR)/tatoosh/config.cfg
+	@cp tatoosh/quake.rc $(GAMEDIR)/tatoosh/quake.rc
+	@cp tatoosh/config.cfg $(GAMEDIR)/tatoosh/config.cfg
 	@test -f tatoosh/progs.dat && cp tatoosh/progs.dat $(GAMEDIR)/tatoosh/progs.dat || true
 
 run: all assemble

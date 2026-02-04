@@ -619,6 +619,7 @@ void() PutClientInServer =
 	self.pausetime = 0;
 	self.land_recovery_time = 0;
 	self.land_speed_scale = 1;
+	self.is_sprinting = FALSE;
 
 	spot = SelectSpawnPoint ();
 
@@ -1211,6 +1212,35 @@ void() PlayerPreThink =
 	}
 	else if (self.land_speed_scale != 1)
 		self.land_speed_scale = 1;
+
+	// Sprint — apply speed and check cancel conditions
+	if (self.is_sprinting)
+	{
+		local vector hvel_sprint;
+		local float hspeed_sprint;
+		hvel_sprint_x = self.velocity_x;
+		hvel_sprint_y = self.velocity_y;
+		hvel_sprint_z = 0;
+		hspeed_sprint = vlen(hvel_sprint);
+
+		if (self.button0)
+		{
+			self.is_sprinting = FALSE;
+			self.maxspeed = cvar("sv_maxspeed");
+			stuffcmd(self, "fov 90\n");
+			self.attack_finished = time + 0.2;
+		}
+		else if (self.deadflag || self.waterlevel >= 2 || hspeed_sprint < 80)
+		{
+			self.is_sprinting = FALSE;
+			self.maxspeed = cvar("sv_maxspeed");
+			stuffcmd(self, "fov 90\n");
+		}
+		else
+		{
+			self.maxspeed = cvar("sv_maxspeed") * 1.5;
+		}
+	}
 
 	if(time > self.attack_finished && self.currentammo == 0 && self.weapon != IT_AXE)
 	{

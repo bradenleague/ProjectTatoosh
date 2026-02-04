@@ -1048,6 +1048,9 @@ void() W_Attack =
 	if (W_hasNoAmmo())
 		return;
 
+	if (self.is_sprinting)
+		return;
+
 	makevectors	(self.v_angle);		// calculate forward angle for velocity
 	self.show_hostile = time + 1;	// wake monsters up
 
@@ -1439,6 +1442,8 @@ void() QuadCheat =
 #define ID_IMPULSE_SERVERFLAGS	11
 #define ID_IMPULSE_CYCLEREVERSE	12
 #define ID_IMPULSE_QUADCHEAT	255
+#define ID_IMPULSE_SPRINTSTART	20
+#define ID_IMPULSE_SPRINTSTOP	21
 
 #ifdef __LIBREQUAKE__
 #ifndef __QW__ // Cutscene camera is not used in QW
@@ -1465,6 +1470,31 @@ void() ImpulseCommands =
 		case ID_IMPULSE_SERVERFLAGS: ServerflagsCommand(); break;
 		case ID_IMPULSE_CYCLEREVERSE: CycleWeaponReverseCommand(); break;
 		case ID_IMPULSE_QUADCHEAT: QuadCheat(); break;
+
+		case ID_IMPULSE_SPRINTSTART:
+		{
+			local vector hv;
+			local float hs;
+			hv_x = self.velocity_x;
+			hv_y = self.velocity_y;
+			hv_z = 0;
+			hs = vlen(hv);
+			if (!self.is_sprinting && !self.deadflag && hs > 80)
+			{
+				self.is_sprinting = TRUE;
+				self.maxspeed = cvar("sv_maxspeed") * 1.5;
+				stuffcmd(self, "fov 95\n");
+			}
+			break;
+		}
+		case ID_IMPULSE_SPRINTSTOP:
+			if (self.is_sprinting)
+			{
+				self.is_sprinting = FALSE;
+				self.maxspeed = cvar("sv_maxspeed");
+				stuffcmd(self, "fov 90\n");
+			}
+			break;
 
 #ifdef __LIBREQUAKE__
 #ifndef __QW__ // Cutscene camera is not used in QW

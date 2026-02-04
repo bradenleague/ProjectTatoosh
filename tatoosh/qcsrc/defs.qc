@@ -578,6 +578,7 @@ float		teamplay;
 .float		jump_flag;		// player jump flag
 .float		land_recovery_time;
 .float		land_speed_scale;
+.float		is_sprinting;
 .float		swim_flag;		// player swimming sound flag
 .float		air_finished;	// when time > air_finished, start drowning
 .float		bubble_count;	// keeps track of the number of bubbles

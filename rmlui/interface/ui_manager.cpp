@@ -28,6 +28,7 @@ extern "C" {
     void Con_Printf(const char* fmt, ...);
     void IN_Activate(void);
     void IN_Deactivate(int clear);
+    void IN_EndIgnoringMouseEvents(void);
     extern int key_dest;
     #define key_game 0
     #define key_menu 2
@@ -489,6 +490,8 @@ void UI_ProcessPending(void)
             IN_Deactivate(true);
             key_dest = key_menu;
         }
+        // Ensure mouse motion events are not filtered while menus are visible.
+        IN_EndIgnoringMouseEvents();
         g_visible = true;
     } else if (g_menu_stack.empty() && g_input_mode == UI_INPUT_MENU_ACTIVE) {
         UI_SetInputMode(UI_INPUT_INACTIVE);
@@ -702,6 +705,11 @@ void UI_SetVisible(int visible)
 int UI_IsVisible(void)
 {
     return g_visible ? 1 : 0;
+}
+
+int UI_IsMenuVisible(void)
+{
+    return HasVisibleMenuDocument() ? 1 : 0;
 }
 
 void UI_Toggle(void)
@@ -965,6 +973,7 @@ void UI_PushMenu(const char* path)
         IN_Deactivate(true);
         key_dest = key_menu;
     }
+    IN_EndIgnoringMouseEvents();
 
     // Record open time to prevent immediate close from same key event
     g_menu_open_time = realtime;

@@ -16,9 +16,6 @@ brew install cmake meson ninja sdl2 molten-vk vulkan-headers glslang freetype
 git clone --recursive https://github.com/bradenleague/Tatoosh.git
 cd Tatoosh
 
-# Symlink for vkQuake compatibility
-ln -s lq1 external/librequake/id1
-
 # Download LibreQuake PAK files
 curl -L "https://github.com/lavenderdotpet/LibreQuake/releases/download/v0.09-beta/full.zip" -o /tmp/librequake.zip
 unzip -q /tmp/librequake.zip -d /tmp/librequake
@@ -36,11 +33,12 @@ Other targets:
 | Command | Description |
 |---------|-------------|
 | `make` | Build everything (RmlUI libs + engine) |
-| `make run` | Build and launch the game |
+| `make run` | Build, assemble game/, and launch |
 | `make libs` | Build only RmlUI + UI integration library |
 | `make engine` | Build only the engine |
+| `make assemble` | Set up game/ runtime directory (symlinks + assets) |
 | `make setup` | Re-run meson setup for the engine |
-| `make clean` | Remove all build artifacts |
+| `make clean` | Remove all build artifacts (including game/) |
 
 ## Asset Compilation (optional)
 

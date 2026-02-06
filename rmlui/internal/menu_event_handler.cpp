@@ -27,6 +27,7 @@ extern "C" {
     void UI_CloseAllMenusImmediate(void);
 
     void IN_Activate(void);
+    extern double realtime;
 
     extern int key_dest;
     #define key_game 0
@@ -493,6 +494,16 @@ void MenuEventHandler::ActionQuit()
 
 void MenuEventHandler::ActionNewGame()
 {
+    static double last_new_game_time = -1.0;
+    const double debounce_window = 0.35;
+    const double now = realtime;
+
+    if (last_new_game_time >= 0.0 && (now - last_new_game_time) < debounce_window) {
+        Con_Printf("MenuEventHandler: Ignoring duplicate new_game action\n");
+        return;
+    }
+    last_new_game_time = now;
+
     Con_Printf("MenuEventHandler: Starting new game\n");
 
     // Close menus first

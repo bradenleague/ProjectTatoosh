@@ -32,7 +32,9 @@ extern "C" {
     void IN_EndIgnoringMouseEvents(void);
     extern int key_dest;
     #define key_game 0
-    #define key_menu 2
+    #define key_console 1
+    #define key_message 2
+    #define key_menu 3
 }
 
 namespace {
@@ -551,7 +553,8 @@ void UI_Resize(int width, int height)
 
 int UI_KeyEvent(int key, int scancode, int pressed, int repeat)
 {
-    if (!g_initialized || !g_context || !g_visible) return 0;
+    if (!g_initialized || !g_context) return 0;
+    if (!g_visible && !HasVisibleMenuDocument()) return 0;
 
     Rml::Input::KeyIdentifier rml_key = TranslateKey(key);
     int modifiers = GetKeyModifiers();
@@ -568,7 +571,8 @@ int UI_KeyEvent(int key, int scancode, int pressed, int repeat)
 
 int UI_CharEvent(unsigned int codepoint)
 {
-    if (!g_initialized || !g_context || !g_visible) return 0;
+    if (!g_initialized || !g_context) return 0;
+    if (!g_visible && !HasVisibleMenuDocument()) return 0;
 
     bool consumed = g_context->ProcessTextInput(static_cast<Rml::Character>(codepoint));
     return consumed ? 1 : 0;
@@ -584,7 +588,8 @@ int UI_MouseMove(int x, int y, int dx, int dy)
     g_last_mouse_x = x;
     g_last_mouse_y = y;
 
-    if (!g_initialized || !g_context || !g_visible) return 0;
+    if (!g_initialized || !g_context) return 0;
+    if (!g_visible && !HasVisibleMenuDocument()) return 0;
 
     int modifiers = GetKeyModifiers();
     bool consumed = g_context->ProcessMouseMove(x, y, modifiers);
@@ -593,11 +598,8 @@ int UI_MouseMove(int x, int y, int dx, int dy)
 
 int UI_MouseButton(int button, int pressed)
 {
-    if (!g_initialized || !g_context || !g_visible) {
-        Con_Printf("UI_MouseButton: ignored (init=%d ctx=%p visible=%d)\n",
-                   g_initialized ? 1 : 0, static_cast<void*>(g_context), g_visible ? 1 : 0);
-        return 0;
-    }
+    if (!g_initialized || !g_context) return 0;
+    if (!g_visible && !HasVisibleMenuDocument()) return 0;
 
     int rml_button = 0;
     switch (button) {
@@ -629,7 +631,8 @@ int UI_MouseButton(int button, int pressed)
 
 int UI_MouseScroll(float x, float y)
 {
-    if (!g_initialized || !g_context || !g_visible) return 0;
+    if (!g_initialized || !g_context) return 0;
+    if (!g_visible && !HasVisibleMenuDocument()) return 0;
 
     int modifiers = GetKeyModifiers();
     bool consumed = g_context->ProcessMouseWheel(Rml::Vector2f(x, -y), modifiers);
@@ -913,13 +916,24 @@ void UI_CloseAllMenus(void)
 
 // Immediately close all menus - for internal use when we're already in the update phase
 // (e.g., from RmlUI event handlers). Do not call from external code.
+// Uses Hide() instead of Close() to avoid invalidating documents during RmlUI event dispatch.
 void UI_CloseAllMenusImmediate(void)
 {
     if (!g_initialized || !g_context) return;
 
-    while (!g_menu_stack.empty()) {
-        UI_ProcessPendingEscape();
+    // Hide all menu documents (safe during event dispatch — doesn't invalidate elements)
+    for (const auto& path : g_menu_stack) {
+        auto it = g_documents.find(path);
+        if (it != g_documents.end() && it->second) {
+            it->second->Hide();
+        }
     }
+    g_menu_stack.clear();
+
+    // Transition to inactive and restore game input
+    UI_SetInputMode(UI_INPUT_INACTIVE);
+    IN_Activate();
+    key_dest = key_game;
 }
 
 void UI_PushMenu(const char* path)

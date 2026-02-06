@@ -9,6 +9,8 @@
 
 #include <RmlUi/Core/SystemInterface.h>
 
+struct SDL_Cursor;
+
 namespace Tatoosh {
 
 class SystemInterface : public Rml::SystemInterface {
@@ -37,6 +39,15 @@ public:
 private:
     double* m_engine_realtime;  // Pointer to vkQuake's realtime variable
     double m_start_time;
+
+    // Pre-allocated SDL cursors (created once, freed in destructor)
+    SDL_Cursor* m_cursor_default = nullptr;
+    SDL_Cursor* m_cursor_move = nullptr;
+    SDL_Cursor* m_cursor_pointer = nullptr;
+    SDL_Cursor* m_cursor_resize = nullptr;
+    SDL_Cursor* m_cursor_cross = nullptr;
+    SDL_Cursor* m_cursor_text = nullptr;
+    SDL_Cursor* m_cursor_unavailable = nullptr;
 };
 
 } // namespace Tatoosh

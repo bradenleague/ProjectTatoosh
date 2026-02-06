@@ -3,6 +3,7 @@
  */
 
 #include "system_interface.h"
+#include <RmlUi/Core/StringUtilities.h>
 #include <SDL.h>
 #include <cstdio>
 
@@ -22,6 +23,13 @@ SystemInterface::SystemInterface()
 
 SystemInterface::~SystemInterface()
 {
+    SDL_FreeCursor(m_cursor_default);
+    SDL_FreeCursor(m_cursor_move);
+    SDL_FreeCursor(m_cursor_pointer);
+    SDL_FreeCursor(m_cursor_resize);
+    SDL_FreeCursor(m_cursor_cross);
+    SDL_FreeCursor(m_cursor_text);
+    SDL_FreeCursor(m_cursor_unavailable);
 }
 
 void SystemInterface::Initialize(double* engine_realtime)
@@ -69,37 +77,41 @@ bool SystemInterface::LogMessage(Rml::Log::Type type, const Rml::String& message
 
 void SystemInterface::SetMouseCursor(const Rml::String& cursor_name)
 {
+    // Lazy-init: create system cursors on first call (SDL video is guaranteed active here)
+    if (!m_cursor_default) {
+        m_cursor_default = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
+        m_cursor_move = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZEALL);
+        m_cursor_pointer = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
+        m_cursor_resize = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENWSE);
+        m_cursor_cross = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_CROSSHAIR);
+        m_cursor_text = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_IBEAM);
+        m_cursor_unavailable = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_NO);
+    }
+
     SDL_Cursor* cursor = nullptr;
 
-    if (cursor_name.empty() || cursor_name == "arrow") {
-        cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
-    } else if (cursor_name == "move") {
-        cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZEALL);
-    } else if (cursor_name == "pointer" || cursor_name == "hand") {
-        cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
-    } else if (cursor_name == "resize" || cursor_name == "ew-resize") {
-        cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZEWE);
-    } else if (cursor_name == "ns-resize") {
-        cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENS);
-    } else if (cursor_name == "nesw-resize") {
-        cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENESW);
-    } else if (cursor_name == "nwse-resize") {
-        cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENWSE);
-    } else if (cursor_name == "text" || cursor_name == "ibeam") {
-        cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_IBEAM);
-    } else if (cursor_name == "crosshair") {
-        cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_CROSSHAIR);
-    } else if (cursor_name == "wait" || cursor_name == "progress") {
-        cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_WAIT);
-    } else if (cursor_name == "not-allowed" || cursor_name == "no-drop") {
-        cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_NO);
-    }
+    if (cursor_name.empty() || cursor_name == "arrow")
+        cursor = m_cursor_default;
+    else if (cursor_name == "move")
+        cursor = m_cursor_move;
+    else if (cursor_name == "pointer" || cursor_name == "hand")
+        cursor = m_cursor_pointer;
+    else if (cursor_name == "resize" || cursor_name == "ew-resize" ||
+             cursor_name == "ns-resize" || cursor_name == "nesw-resize" ||
+             cursor_name == "nwse-resize")
+        cursor = m_cursor_resize;
+    else if (cursor_name == "cross" || cursor_name == "crosshair")
+        cursor = m_cursor_cross;
+    else if (cursor_name == "text" || cursor_name == "ibeam")
+        cursor = m_cursor_text;
+    else if (cursor_name == "not-allowed" || cursor_name == "no-drop" ||
+             cursor_name == "wait" || cursor_name == "progress")
+        cursor = m_cursor_unavailable;
+    else if (Rml::StringUtilities::StartsWith(cursor_name, "rmlui-scroll"))
+        cursor = m_cursor_move;
 
-    if (cursor) {
+    if (cursor)
         SDL_SetCursor(cursor);
-        // Note: SDL_FreeCursor should be called when done, but SDL manages
-        // system cursors internally. For custom cursors, track and free them.
-    }
 }
 
 void SystemInterface::SetClipboardText(const Rml::String& text)

@@ -549,8 +549,11 @@ void UI_ProcessPending(void)
         }
     }
 
-    // Reconcile menu state in case external systems changed key_dest or visibility.
-    if (HasVisibleMenuDocument()) {
+    // Reconcile: if the menu stack says menus are active, make sure the
+    // engine-side state agrees.  We trust the stack (set by UI_PushMenu /
+    // UI_CloseAllMenusImmediate) rather than probing RmlUI document
+    // visibility, which may lag by a frame.
+    if (!g_menu_stack.empty()) {
         if (g_input_mode != UI_INPUT_MENU_ACTIVE) {
             UI_SetInputMode(UI_INPUT_MENU_ACTIVE);
         }
@@ -558,10 +561,9 @@ void UI_ProcessPending(void)
             IN_Deactivate(true);
             key_dest = key_menu;
         }
-        // Ensure mouse motion events are not filtered while menus are visible.
         IN_EndIgnoringMouseEvents();
         g_visible = true;
-    } else if (g_menu_stack.empty() && g_input_mode == UI_INPUT_MENU_ACTIVE) {
+    } else if (g_input_mode == UI_INPUT_MENU_ACTIVE) {
         UI_SetInputMode(UI_INPUT_INACTIVE);
     }
 }
@@ -605,7 +607,7 @@ void UI_Resize(int width, int height)
 int UI_KeyEvent(int key, int scancode, int pressed, int repeat)
 {
     if (!g_initialized || !g_context) return 0;
-    if (!g_visible && !HasVisibleMenuDocument()) return 0;
+    if (!g_visible && g_menu_stack.empty()) return 0;
 
     Rml::Input::KeyIdentifier rml_key = TranslateKey(key);
     int modifiers = GetKeyModifiers();
@@ -623,7 +625,7 @@ int UI_KeyEvent(int key, int scancode, int pressed, int repeat)
 int UI_CharEvent(unsigned int codepoint)
 {
     if (!g_initialized || !g_context) return 0;
-    if (!g_visible && !HasVisibleMenuDocument()) return 0;
+    if (!g_visible && g_menu_stack.empty()) return 0;
 
     bool consumed = g_context->ProcessTextInput(static_cast<Rml::Character>(codepoint));
     return consumed ? 1 : 0;
@@ -640,7 +642,7 @@ int UI_MouseMove(int x, int y, int dx, int dy)
     g_last_mouse_y = y;
 
     if (!g_initialized || !g_context) return 0;
-    if (!g_visible && !HasVisibleMenuDocument()) return 0;
+    if (!g_visible && g_menu_stack.empty()) return 0;
 
     int modifiers = GetKeyModifiers();
     bool consumed = g_context->ProcessMouseMove(x, y, modifiers);
@@ -650,7 +652,7 @@ int UI_MouseMove(int x, int y, int dx, int dy)
 int UI_MouseButton(int button, int pressed)
 {
     if (!g_initialized || !g_context) return 0;
-    if (!g_visible && !HasVisibleMenuDocument()) return 0;
+    if (!g_visible && g_menu_stack.empty()) return 0;
 
     int rml_button = 0;
     switch (button) {
@@ -683,7 +685,7 @@ int UI_MouseButton(int button, int pressed)
 int UI_MouseScroll(float x, float y)
 {
     if (!g_initialized || !g_context) return 0;
-    if (!g_visible && !HasVisibleMenuDocument()) return 0;
+    if (!g_visible && g_menu_stack.empty()) return 0;
 
     int modifiers = GetKeyModifiers();
     bool consumed = g_context->ProcessMouseWheel(Rml::Vector2f(x, -y), modifiers);
@@ -928,21 +930,15 @@ int UI_WantsMenuInput(void)
         return 0;
     }
 
-    // If the engine is in menu mode and the UI is visible, treat as active.
-    if (g_visible && key_dest == key_menu) {
+    // Menu stack is the authoritative source of truth.  Check it first so
+    // that UI_CloseAllMenusImmediate() (which clears the stack and sets
+    // INACTIVE) takes effect immediately, even before RmlUI document
+    // visibility properties have fully propagated.
+    if (g_input_mode == UI_INPUT_MENU_ACTIVE || !g_menu_stack.empty()) {
         return 1;
     }
 
-    if (HasVisibleMenuDocument()) {
-        return 1;
-    }
-
-    // Menu stack is the source of truth for menu input.
-    if (!g_menu_stack.empty()) {
-        return 1;
-    }
-
-    return (g_input_mode == UI_INPUT_MENU_ACTIVE) ? 1 : 0;
+    return 0;
 }
 
 void UI_HandleEscape(void)

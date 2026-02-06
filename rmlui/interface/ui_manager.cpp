@@ -11,6 +11,7 @@
 #include "../infrastructure/game_data_model.h"
 #include "../infrastructure/cvar_binding.h"
 #include "../infrastructure/menu_event_handler.h"
+#include "../application/menu_stack.h"
 
 #include <RmlUi/Core.h>
 #include <RmlUi/Debugger.h>
@@ -51,6 +52,13 @@ ui_input_mode_t g_input_mode = UI_INPUT_INACTIVE;
 std::vector<std::string> g_menu_stack;  // Stack of menu document paths for escape navigation
 double g_menu_open_time = 0.0;  // Time when menu was last opened (to prevent immediate close)
 
+// HUD/overlay tracking
+const char* g_current_hud = nullptr;
+bool g_hud_visible = false;
+bool g_scoreboard_visible = false;
+bool g_intermission_visible = false;
+int g_last_intermission = 0;
+
 // Deferred operations - processed during UI_Update to avoid race conditions with rendering
 bool g_pending_escape = false;  // ESC pressed, handle at next update
 bool g_pending_close_all = false;  // Request to close all menus at next update
@@ -59,15 +67,6 @@ bool g_pending_close_all = false;  // Request to close all menus at next update
 std::unordered_map<std::string, Rml::ElementDocument*> g_documents;
 std::string g_ui_base_path;       // Base path for UI assets (set during font loading)
 std::string g_engine_base_path;   // com_basedir passed from engine
-
-// Data binding storage
-struct BoundInt { const char* name; int* value; };
-struct BoundFloat { const char* name; float* value; };
-struct BoundString { const char* name; const char** value; };
-
-std::vector<BoundInt> g_bound_ints;
-std::vector<BoundFloat> g_bound_floats;
-std::vector<BoundString> g_bound_strings;
 
 bool IsMenuDocumentPath(const std::string& path)
 {
@@ -243,6 +242,11 @@ int UI_Init(int width, int height, const char* base_path)
     g_documents.clear();
     g_ui_base_path.clear();
     g_assets_loaded = false;
+    g_current_hud = nullptr;
+    g_hud_visible = false;
+    g_scoreboard_visible = false;
+    g_intermission_visible = false;
+    g_last_intermission = 0;
 
     g_width = width;
     g_height = height;
@@ -378,11 +382,6 @@ void UI_Shutdown(void)
     }
     g_documents.clear();
 
-    // Clear bindings
-    g_bound_ints.clear();
-    g_bound_floats.clear();
-    g_bound_strings.clear();
-
     // Shutdown debugger
     Rml::Debugger::Shutdown();
 
@@ -410,6 +409,11 @@ void UI_Shutdown(void)
     g_ui_base_path.clear();
     g_engine_base_path.clear();
     g_assets_loaded = false;
+    g_current_hud = nullptr;
+    g_hud_visible = false;
+    g_scoreboard_visible = false;
+    g_intermission_visible = false;
+    g_last_intermission = 0;
 
     g_initialized = false;
     Con_Printf("UI_Shutdown: RmlUI shut down\n");
@@ -421,8 +425,7 @@ static void UI_ProcessPendingEscape(void)
     if (!g_initialized || !g_context) return;
 
     // Prevent immediate close if menu was just opened (same key event causing open+close)
-    // 0.1 seconds is enough to cover key repeat issues
-    if (realtime - g_menu_open_time < 0.1) {
+    if (realtime - g_menu_open_time < Tatoosh::MENU_DEBOUNCE_SECONDS) {
         return;
     }
 
@@ -717,26 +720,6 @@ void UI_Toggle(void)
     g_visible = !g_visible;
 }
 
-void UI_BindInt(const char* name, int* value)
-{
-    g_bound_ints.push_back({name, value});
-}
-
-void UI_BindFloat(const char* name, float* value)
-{
-    g_bound_floats.push_back({name, value});
-}
-
-void UI_BindString(const char* name, const char** value)
-{
-    g_bound_strings.push_back({name, value});
-}
-
-void UI_UpdateBindings(void)
-{
-    // TODO: Implement data binding updates
-    // This would update RmlUI data models with current values
-}
 
 void UI_ToggleDebugger(void)
 {
@@ -983,6 +966,130 @@ void UI_PopMenu(void)
 {
     // Same as HandleEscape for now - could have different behavior later
     UI_HandleEscape();
+}
+
+// ── HUD / Scoreboard / Intermission ────────────────────────────────
+
+void UI_ShowHUD(const char* hud_document)
+{
+    if (!hud_document) {
+        hud_document = "ui/rml/hud/hud_classic.rml";
+    }
+
+    // Hide previous HUD if different
+    if (g_current_hud && g_current_hud != hud_document && g_hud_visible) {
+        UI_HideDocument(g_current_hud);
+    }
+
+    // Load and show new HUD
+    if (UI_LoadDocument(hud_document)) {
+        UI_ShowDocument(hud_document, 0);
+        g_current_hud = hud_document;
+        g_hud_visible = true;
+        UI_SetInputMode(UI_INPUT_OVERLAY);
+    }
+
+    // Reset intermission tracking on new game/map
+    g_last_intermission = 0;
+}
+
+void UI_HideHUD(void)
+{
+    if (g_current_hud && g_hud_visible) {
+        UI_HideDocument(g_current_hud);
+        g_hud_visible = false;
+    }
+    if (g_intermission_visible) {
+        UI_HideDocument("ui/rml/hud/intermission.rml");
+        g_intermission_visible = false;
+    }
+    if (g_scoreboard_visible) {
+        UI_HideDocument("ui/rml/hud/scoreboard.rml");
+        g_scoreboard_visible = false;
+    }
+    g_last_intermission = 0;
+
+    if (!UI_WantsMenuInput()) {
+        UI_SetInputMode(UI_INPUT_INACTIVE);
+    }
+}
+
+int UI_IsHUDVisible(void)
+{
+    return g_hud_visible ? 1 : 0;
+}
+
+void UI_ShowScoreboard(void)
+{
+    if (UI_LoadDocument("ui/rml/hud/scoreboard.rml")) {
+        UI_ShowDocument("ui/rml/hud/scoreboard.rml", 0);
+        g_scoreboard_visible = true;
+    }
+}
+
+void UI_HideScoreboard(void)
+{
+    if (g_scoreboard_visible) {
+        UI_HideDocument("ui/rml/hud/scoreboard.rml");
+        g_scoreboard_visible = false;
+    }
+}
+
+void UI_ShowIntermission(void)
+{
+    if (UI_LoadDocument("ui/rml/hud/intermission.rml")) {
+        UI_ShowDocument("ui/rml/hud/intermission.rml", 0);
+        g_intermission_visible = true;
+    }
+}
+
+void UI_HideIntermission(void)
+{
+    if (g_intermission_visible) {
+        UI_HideDocument("ui/rml/hud/intermission.rml");
+        g_intermission_visible = false;
+    }
+}
+
+// ── Game state synchronization ─────────────────────────────────────
+
+void UI_SyncGameState(const int* stats, int items,
+                      int intermission, int gametype,
+                      int maxclients,
+                      const char* level_name, const char* map_name,
+                      double game_time)
+{
+    // Ensure OVERLAY mode if HUD is visible and no menu is open
+    if (g_hud_visible && !UI_WantsMenuInput()) {
+        if (UI_GetInputMode() == UI_INPUT_INACTIVE) {
+            UI_SetInputMode(UI_INPUT_OVERLAY);
+        }
+    }
+
+    // Detect intermission state changes
+    if (intermission != g_last_intermission) {
+        if (intermission > 0 && g_last_intermission == 0) {
+            UI_ShowIntermission();
+        } else if (intermission == 0 && g_last_intermission > 0) {
+            UI_HideIntermission();
+        }
+        g_last_intermission = intermission;
+    }
+
+    GameDataModel_SyncFromQuake(stats, items, intermission, gametype,
+                                maxclients, level_name, map_name, game_time);
+}
+
+// ── Key capture ────────────────────────────────────────────────────
+
+int UI_IsCapturingKey(void)
+{
+    return MenuEventHandler_IsCapturingKey();
+}
+
+void UI_OnKeyCaptured(int key, const char* key_name)
+{
+    MenuEventHandler_OnKeyCaptured(key, key_name);
 }
 
 } // extern "C"

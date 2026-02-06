@@ -590,3 +590,325 @@
     min-width: 80dp;
     text-align: right;
 }
+
+/* ============================================
+   Simple HUD Variant (hud.rml)
+   ============================================ */
+
+#crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24dp;
+    height: 24dp;
+    margin-top: -12dp;
+    margin-left: -12dp;
+}
+
+#crosshair .dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4dp;
+    height: 4dp;
+    margin-top: -2dp;
+    margin-left: -2dp;
+    background-color: #ffffff;
+}
+
+#crosshair .line-h {
+    position: absolute;
+    top: 50%;
+    width: 8dp;
+    height: 2dp;
+    margin-top: -1dp;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+#crosshair .line-v {
+    position: absolute;
+    left: 50%;
+    width: 2dp;
+    height: 8dp;
+    margin-left: -1dp;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+#crosshair .line-left { left: 0; }
+#crosshair .line-right { right: 0; }
+#crosshair .line-top { top: 0; }
+#crosshair .line-bottom { bottom: 0; }
+
+#messages {
+    position: absolute;
+    top: 24dp;
+    left: 24dp;
+    width: 400dp;
+}
+
+.message.damage {
+    border-left-color: #ff0000;
+    color: #ff0000;
+}
+
+.stat-group {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 12dp;
+}
+
+#status-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80dp;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-top: 3dp #ffffff;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32dp;
+}
+
+#health .stat-value { color: #ff0000; }
+#armor .stat-value { color: #ffffff; }
+#ammo .stat-value { color: #ffcc00; }
+
+#weapon-info {
+    position: absolute;
+    bottom: 92dp;
+    right: 32dp;
+    padding: 8dp 16dp;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-left: 3dp #ffffff;
+}
+
+#weapon-name {
+    font-size: 14dp;
+    color: #888888;
+    text-transform: uppercase;
+    letter-spacing: 1dp;
+}
+
+/* ============================================
+   Classic HUD Variant (hud_classic.rml)
+   ============================================ */
+
+.hud-classic .status-bar {
+    height: 72dp;
+    background-color: rgba(0, 0, 0, 0.95);
+    border-top: 0;
+}
+
+.hud-classic .weapon-slot {
+    width: 44dp;
+    height: 44dp;
+}
+
+.weapon-row {
+    position: absolute;
+    bottom: 80dp;
+    left: 24dp;
+    display: flex;
+    gap: 2dp;
+}
+
+.weapon-num {
+    font-size: 20dp;
+    font-weight: bold;
+    color: #333333;
+}
+
+.weapon-slot.owned .weapon-num { color: #888888; }
+.weapon-slot.active .weapon-num { color: #000000; }
+
+.ammo-row {
+    position: absolute;
+    bottom: 80dp;
+    right: 24dp;
+    display: flex;
+    gap: 20dp;
+}
+
+.ammo-type {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ammo-type .count {
+    font-size: 20dp;
+    font-weight: bold;
+    font-effect: outline(1dp #000000);
+}
+
+.ammo-type.shells .count { color: #cc9933; }
+.ammo-type.nails .count { color: #999999; }
+.ammo-type.rockets .count { color: #ff3300; }
+.ammo-type.cells .count { color: #00ccff; }
+
+.items-row {
+    position: absolute;
+    bottom: 132dp;
+    right: 24dp;
+    display: flex;
+    gap: 6dp;
+}
+
+.item-box {
+    width: 28dp;
+    height: 28dp;
+    background-color: rgba(255, 255, 255, 0.1);
+    opacity: 0.2;
+}
+
+.item-box.owned {
+    opacity: 1.0;
+    border: 2dp #ffffff;
+}
+
+.item-box.key-silver.owned { background-color: #cccccc; }
+.item-box.key-gold.owned { background-color: #ffcc00; }
+
+.item-box.quad.owned {
+    background-color: #0066ff;
+    animation: pulse 0.4s ease-in-out infinite;
+}
+
+.item-box.pent.owned {
+    background-color: #ff0000;
+    animation: pulse 0.4s ease-in-out infinite;
+}
+
+.item-box.ring.owned {
+    background-color: #ffcc00;
+    animation: pulse 0.6s ease-in-out infinite;
+}
+
+.item-box.suit.owned {
+    background-color: #00cc00;
+}
+
+/* ============================================
+   Modern HUD - Components (hud_modern.rml)
+   ============================================ */
+
+.corner-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 4dp;
+}
+
+.corner-stat {
+    display: flex;
+    align-items: baseline;
+    gap: 8dp;
+}
+
+.corner-stat .value {
+    font-size: 64dp;
+    font-weight: bold;
+    font-effect: outline(3dp #000000);
+    line-height: 1em;
+}
+
+.corner-stat .label {
+    font-size: 14dp;
+    text-transform: uppercase;
+    letter-spacing: 2dp;
+    color: #666666;
+    font-weight: bold;
+}
+
+.corner-stat.health .value { color: #ff0000; }
+.corner-stat.armor .value { color: #ffffff; }
+.corner-stat.ammo .value { color: #ffcc00; }
+
+.corner-stat.low .value {
+    animation: pulse 0.4s ease-in-out infinite;
+}
+
+.hud-modern .corner-stats.hud-bottom-right {
+    align-items: flex-end;
+}
+
+.crosshair-minimal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6dp;
+    height: 6dp;
+    margin-top: -3dp;
+    margin-left: -3dp;
+    background-color: #ffffff;
+}
+
+.keys-row {
+    display: flex;
+    gap: 4dp;
+}
+
+.key-icon {
+    width: 24dp;
+    height: 24dp;
+    background-color: rgba(255, 255, 255, 0.1);
+    opacity: 0.2;
+}
+
+.key-icon.owned {
+    opacity: 1.0;
+    border: 2dp #ffffff;
+}
+
+.key-icon.silver.owned { background-color: #cccccc; }
+.key-icon.gold.owned { background-color: #ffcc00; }
+
+.powerups-row {
+    display: flex;
+    gap: 8dp;
+}
+
+.powerup-icon {
+    width: 36dp;
+    height: 36dp;
+    border: 2dp #ffffff;
+}
+
+.powerup-icon.quad {
+    background-color: #0066ff;
+    animation: pulse 0.4s ease-in-out infinite;
+}
+
+.powerup-icon.pent {
+    background-color: #ff0000;
+    animation: pulse 0.4s ease-in-out infinite;
+}
+
+.powerup-icon.ring {
+    background-color: #ffcc00;
+    animation: pulse 0.6s ease-in-out infinite;
+}
+
+.powerup-icon.suit {
+    background-color: #00cc00;
+}
+
+.level-info {
+    font-size: 12dp;
+    color: #444444;
+    text-transform: uppercase;
+    letter-spacing: 1dp;
+}
+
+.level-info div {
+    margin-bottom: 4dp;
+}
+
+.hud-modern .level-info {
+    position: absolute;
+    top: 72dp;
+    left: 24dp;
+}

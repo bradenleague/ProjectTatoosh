@@ -199,6 +199,7 @@ void GameDataModel_Update(void)
 
 void GameDataModel_SyncFromQuake(const int* stats, int items,
                                   int intermission, int gametype,
+                                  int maxclients,
                                   const char* level_name, const char* map_name,
                                   double game_time)
 {
@@ -262,8 +263,8 @@ void GameDataModel_SyncFromQuake(const int* stats, int items,
 
     // Game state
     g_game_state.intermission = (intermission != 0);
-    g_game_state.deathmatch = (gametype != 0);  // gametype > 0 = deathmatch
-    g_game_state.coop = false;  // TODO: proper coop detection
+    g_game_state.deathmatch = (gametype != 0);
+    g_game_state.coop = (gametype == 0 && maxclients > 1);
 
     // Level info
     if (level_name) {

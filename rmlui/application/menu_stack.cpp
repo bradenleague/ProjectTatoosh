@@ -112,7 +112,7 @@ void MenuStack::ProcessPending()
 void MenuStack::ProcessEscape()
 {
     // Debounce: prevent immediate close if menu was just opened
-    if (s_time_ptr && (*s_time_ptr - s_open_time) < 0.1) {
+    if (s_time_ptr && (*s_time_ptr - s_open_time) < MENU_DEBOUNCE_SECONDS) {
         return;
     }
 

@@ -16,6 +16,9 @@
 
 namespace Tatoosh {
 
+// Debounce window (seconds) to prevent immediate close when a menu was just opened
+constexpr double MENU_DEBOUNCE_SECONDS = 0.1;
+
 // Callback type for mode changes
 using InputModeCallback = std::function<void(ui_input_mode_t)>;
 

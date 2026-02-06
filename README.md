@@ -10,27 +10,24 @@ Built on [vkQuake](https://github.com/Novum/vkQuake) (Vulkan renderer), [RmlUI](
 
 ## Getting Started
 
-### Prerequisites (macOS)
+### Prerequisites
 
+**Arch Linux:**
+```bash
+sudo pacman -S cmake meson ninja sdl2 vulkan-devel glslang freetype2
+```
+
+**macOS:**
 ```bash
 brew install cmake meson ninja sdl2 molten-vk vulkan-headers glslang freetype
 ```
 
-### Clone and Setup
+### Clone, Setup, and Run
 
 ```bash
-git clone --recursive https://github.com/bradenleague/Tatoosh.git
-cd Tatoosh
-
-# Download LibreQuake PAK files
-curl -L "https://github.com/lavenderdotpet/LibreQuake/releases/download/v0.09-beta/full.zip" -o /tmp/librequake.zip
-unzip -q /tmp/librequake.zip -d /tmp/librequake
-cp /tmp/librequake/full/id1/pak*.pak external/librequake/lq1/
-```
-
-### Build and Run
-
-```bash
+git clone https://github.com/bradenleague/ProjectTatoosh.git
+cd ProjectTatoosh
+make setup   # checks deps, inits submodules, downloads PAK files
 make run
 ```
 
@@ -43,7 +40,8 @@ Other targets:
 | `make libs` | Build only RmlUI + UI integration library |
 | `make engine` | Build only the engine |
 | `make assemble` | Set up game/ runtime directory (symlinks + assets) |
-| `make setup` | Re-run meson setup for the engine |
+| `make setup` | First-time setup (deps, submodules, PAK files) |
+| `make meson-setup` | Re-run meson setup for the engine |
 | `make clean` | Remove all build artifacts (including game/) |
 
 <p align="center">
@@ -71,10 +69,12 @@ tools/
 ├── qbsp                # BSP compiler (ericw-tools)
 ├── vis                 # Visibility compiler (ericw-tools)
 ├── light               # Light compiler (ericw-tools)
-├── libembree.2.dylib   # ericw-tools runtime dependency
-├── libtbb.dylib        # ericw-tools runtime dependency
-└── libtbbmalloc.dylib  # ericw-tools runtime dependency
+├── libembree.2.dylib   # ericw-tools runtime dep (macOS)
+├── libtbb.dylib        # ericw-tools runtime dep (macOS)
+└── libtbbmalloc.dylib  # ericw-tools runtime dep (macOS)
 ```
+
+On Linux, ericw-tools links against system libraries instead. Install with `yay -S ericw-tools` (AUR) or build from source.
 
 > **Note:** PAK files are currently downloaded from a LibreQuake release rather than
 > built from source. LibreQuake's `build.py` can generate them with `qpakman`, but

@@ -235,8 +235,6 @@ a:hover {
 /* Display */
 .hidden { display: none; }
 .visible { display: block; }
-.inline { display: inline; }
-.inline-block { display: inline-block; }
 
 /* ============================================
    Color Utilities
@@ -271,13 +269,11 @@ a:hover {
 
 .border { border: 1dp #2a4060; }
 .border-0 { border-width: 0; }
-.border-light { border: 1dp #3a5070; }
 .border-accent { border: 1dp #4090e0; }
 
 .rounded { border-radius: 4dp; }
 .rounded-sm { border-radius: 2dp; }
 .rounded-lg { border-radius: 8dp; }
-.rounded-full { border-radius: 9999dp; }
 
 /* ============================================
    Animations

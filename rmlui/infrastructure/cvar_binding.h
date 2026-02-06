@@ -22,30 +22,9 @@
 #include <unordered_map>
 #include <vector>
 #include "../domain/ports/cvar_provider.h"
+#include "../domain/cvar_schema.h"
 
 namespace Tatoosh {
-
-// Cvar type enumeration
-enum class CvarType {
-    Float,
-    Bool,
-    Int,
-    Enum,
-    String
-};
-
-// Registered cvar binding info
-struct CvarBinding {
-    std::string cvar_name;   // Console variable name
-    std::string ui_name;     // Name used in RmlUI data model
-    CvarType type;
-    float min_value;
-    float max_value;
-    float step;
-    int num_values;          // For enum type
-    std::vector<int> enum_values;          // Optional explicit values for enum
-    std::vector<std::string> enum_labels;  // Optional display labels for enum
-};
 
 class CvarBindingManager {
 public:

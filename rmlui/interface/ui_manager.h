@@ -6,6 +6,8 @@
 #ifndef TATOOSH_UI_MANAGER_H
 #define TATOOSH_UI_MANAGER_H
 
+#include "../domain/input_mode.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -47,26 +49,11 @@ int UI_IsVisible(void);
 void UI_Toggle(void);
 int UI_IsMenuVisible(void);
 
-/* Data binding - connect QuakeC globals to UI elements */
-void UI_BindInt(const char *name, int *value);
-void UI_BindFloat(const char *name, float *value);
-void UI_BindString(const char *name, const char **value);
-
-/* Update bound data (call when QuakeC values change) */
-void UI_UpdateBindings(void);
-
 /* Debug overlay toggle */
 void UI_ToggleDebugger(void);
 
 /* Hot reload support (if enabled) */
 void UI_ReloadDocuments(void);
-
-/* Input mode - controls how RmlUI interacts with vkQuake's input system */
-typedef enum {
-    UI_INPUT_INACTIVE,      /* Not handling input - game/Quake menu works normally */
-    UI_INPUT_MENU_ACTIVE,   /* Menu captures all input (except escape handled specially) */
-    UI_INPUT_OVERLAY        /* HUD mode - visible but passes input through to game */
-} ui_input_mode_t;
 
 /* Input mode control */
 void UI_SetInputMode(ui_input_mode_t mode);
@@ -78,10 +65,52 @@ void UI_CloseAllMenusImmediate(void); /* Close all menus immediately (for intern
 void UI_PushMenu(const char* path);   /* Open menu, set MENU_ACTIVE */
 void UI_PopMenu(void);            /* Pop current menu from stack */
 
+/* HUD control */
+void UI_ShowHUD(const char* hud_document);   /* NULL = default hud_classic.rml */
+void UI_HideHUD(void);
+int UI_IsHUDVisible(void);
+
+/* Scoreboard and intermission overlays */
+void UI_ShowScoreboard(void);
+void UI_HideScoreboard(void);
+void UI_ShowIntermission(void);
+void UI_HideIntermission(void);
+
+/* Game state synchronization - call each frame from sbar.c */
+void UI_SyncGameState(const int* stats, int items,
+                      int intermission, int gametype,
+                      int maxclients,
+                      const char* level_name, const char* map_name,
+                      double game_time);
+
+/* Key capture support (for rebinding UI) */
+int UI_IsCapturingKey(void);
+void UI_OnKeyCaptured(int key, const char* key_name);
+
 /* Vulkan integration - call after vkQuake initializes Vulkan */
-/* Note: VulkanConfig is defined in render_interface_vk.h (Tatoosh::VulkanConfig) */
-struct Tatoosh_VulkanConfig;  /* Forward declaration for C compatibility */
-void UI_InitializeVulkan(const void* config);  /* Takes Tatoosh::VulkanConfig* */
+#include <vulkan/vulkan.h>
+typedef struct ui_vulkan_config_s {
+    VkDevice device;
+    VkPhysicalDevice physical_device;
+    VkQueue graphics_queue;
+    uint32_t queue_family_index;
+    VkFormat color_format;
+    VkFormat depth_format;
+    VkSampleCountFlagBits sample_count;
+    VkRenderPass render_pass;
+    uint32_t subpass;
+    VkPhysicalDeviceMemoryProperties memory_properties;
+    PFN_vkCmdBindPipeline cmd_bind_pipeline;
+    PFN_vkCmdBindDescriptorSets cmd_bind_descriptor_sets;
+    PFN_vkCmdBindVertexBuffers cmd_bind_vertex_buffers;
+    PFN_vkCmdBindIndexBuffer cmd_bind_index_buffer;
+    PFN_vkCmdDraw cmd_draw;
+    PFN_vkCmdDrawIndexed cmd_draw_indexed;
+    PFN_vkCmdPushConstants cmd_push_constants;
+    PFN_vkCmdSetScissor cmd_set_scissor;
+    PFN_vkCmdSetViewport cmd_set_viewport;
+} ui_vulkan_config_t;
+void UI_InitializeVulkan(const void* config);  /* Takes ui_vulkan_config_t* */
 
 /* Frame rendering hooks - called by vkQuake's render loop */
 void UI_BeginFrame(void* cmd, int width, int height);

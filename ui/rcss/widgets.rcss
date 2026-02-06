@@ -46,17 +46,6 @@ button:disabled:hover, .btn:disabled:hover {
     transform: none;
 }
 
-/* Button sizes */
-.btn-sm {
-    padding: 6dp 12dp;
-    font-size: 14dp;
-}
-
-.btn-lg {
-    padding: 14dp 28dp;
-    font-size: 18dp;
-}
-
 /* Button variants */
 .btn-primary {
     background-color: rgba(45, 90, 150, 0.95);
@@ -66,16 +55,6 @@ button:disabled:hover, .btn:disabled:hover {
 .btn-primary:hover {
     background-color: rgba(55, 110, 180, 1.0);
     border-color: #50a0e0;
-}
-
-.btn-secondary {
-    background-color: rgba(50, 60, 75, 0.9);
-    border-color: #4a5565;
-}
-
-.btn-secondary:hover {
-    background-color: rgba(65, 75, 90, 0.95);
-    border-color: #5a6575;
 }
 
 .btn-success {
@@ -173,23 +152,6 @@ input.checkbox:checked {
 /* Checkbox checkmark - RmlUI doesn't support ::before pseudo-elements with content */
 /* Visual feedback handled by background color change on :checked state */
 
-/* Checkbox with label */
-.checkbox-group {
-    display: flex;
-    align-items: center;
-    gap: 10dp;
-    cursor: pointer;
-}
-
-.checkbox-label {
-    color: #c0d0e0;
-    font-size: 16dp;
-}
-
-.checkbox-group:hover .checkbox-label {
-    color: #e0f0ff;
-}
-
 /* ============================================
    Radio Buttons
    ============================================ */
@@ -214,29 +176,6 @@ input.radio:checked {
 
 /* Radio button inner dot - RmlUI doesn't support ::before pseudo-elements with content */
 /* Visual feedback handled by background color change on :checked state */
-
-/* Radio group */
-.radio-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8dp;
-}
-
-.radio-option {
-    display: flex;
-    align-items: center;
-    gap: 10dp;
-    cursor: pointer;
-}
-
-.radio-label {
-    color: #c0d0e0;
-    font-size: 16dp;
-}
-
-.radio-option:hover .radio-label {
-    color: #e0f0ff;
-}
 
 /* ============================================
    Sliders / Range Inputs
@@ -286,157 +225,6 @@ input.range sliderarrowinc {
 input.range slidertrack fill {
     background-color: rgba(64, 144, 208, 0.6);
     border-radius: 2dp;
-}
-
-/* ============================================
-   Select / Dropdown
-   ============================================ */
-
-select, .select {
-    display: block;
-    width: 100%;
-    background-color: rgba(20, 35, 55, 0.9);
-    border: 1dp #2a4060;
-    border-radius: 3dp;
-    padding: 10dp 14dp;
-    color: #c0d0e0;
-    font-size: 16dp;
-    cursor: pointer;
-}
-
-select:hover, .select:hover {
-    border-color: #3a5080;
-    background-color: rgba(25, 45, 70, 0.95);
-}
-
-select selectvalue {
-    padding-right: 24dp;
-}
-
-select selectarrow {
-    width: 0;
-    height: 0;
-    border-left: 6dp transparent;
-    border-right: 6dp transparent;
-    border-top: 8dp #6090c0;
-    margin-top: 6dp;
-    margin-right: 4dp;
-}
-
-select selectbox {
-    background-color: rgba(15, 25, 40, 0.98);
-    border: 1dp #3a5080;
-    border-radius: 3dp;
-    padding: 4dp 0;
-    margin-top: 2dp;
-}
-
-select selectbox option {
-    padding: 8dp 14dp;
-    color: #c0d0e0;
-}
-
-select selectbox option:hover {
-    background-color: rgba(40, 70, 110, 0.8);
-    color: #e0f0ff;
-}
-
-select selectbox option:checked {
-    background-color: rgba(50, 90, 140, 0.9);
-    color: #ffffff;
-}
-
-/* ============================================
-   Progress Bar
-   ============================================ */
-
-progressbar {
-    height: 20dp;
-    background-color: rgba(15, 25, 40, 0.9);
-    border: 1dp #2a4060;
-    border-radius: 3dp;
-}
-
-progressbar fill {
-    background-color: #4090d0;
-    border-radius: 2dp;
-}
-
-/* Variant colors */
-progressbar.success fill {
-    background-color: #40a070;
-}
-
-progressbar.warning fill {
-    background-color: #c08030;
-}
-
-progressbar.danger fill {
-    background-color: #c04040;
-}
-
-/* ============================================
-   Tabs
-   ============================================ */
-
-.tabs {
-    display: flex;
-    border-bottom: 2dp #2a4060;
-    margin-bottom: 16dp;
-}
-
-.tab {
-    padding: 12dp 24dp;
-    color: #8090a0;
-    font-size: 16dp;
-    cursor: pointer;
-    border-bottom: 2dp transparent;
-    margin-bottom: -2dp;
-    transition: color 0.15s, border-color 0.15s;
-}
-
-.tab:hover {
-    color: #c0d0e0;
-}
-
-.tab.active {
-    color: #60c0ff;
-    border-bottom-color: #60c0ff;
-}
-
-.tab-content {
-    display: none;
-}
-
-.tab-content.active {
-    display: block;
-}
-
-/* ============================================
-   Toggle Switch
-   ============================================ */
-
-.toggle {
-    width: 48dp;
-    height: 26dp;
-    background-color: rgba(30, 45, 65, 0.9);
-    border: 1dp #2a4060;
-    border-radius: 13dp;
-    cursor: pointer;
-    position: relative;
-    transition: background-color 0.2s, border-color 0.2s;
-}
-
-.toggle:hover {
-    border-color: #3a5080;
-}
-
-/* Toggle knob - RmlUI doesn't support ::before pseudo-elements with content */
-/* Use a child element in RML instead for the toggle knob */
-
-.toggle.on {
-    background-color: rgba(40, 100, 160, 0.9);
-    border-color: #4090d0;
 }
 
 /* ============================================
@@ -515,38 +303,3 @@ progressbar.danger fill {
     flex: 1;
 }
 
-/* ============================================
-   Loading Spinner
-   ============================================ */
-
-.spinner {
-    width: 32dp;
-    height: 32dp;
-    border: 3dp rgba(64, 144, 208, 0.3);
-    border-top-color: #4090d0;
-    border-radius: 16dp;
-    animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.spinner-sm {
-    width: 20dp;
-    height: 20dp;
-    border-width: 2dp;
-    border-radius: 10dp;
-}
-
-.spinner-lg {
-    width: 48dp;
-    height: 48dp;
-    border-width: 4dp;
-    border-radius: 24dp;
-}

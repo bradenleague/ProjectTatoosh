@@ -13,11 +13,12 @@
     <div class="corner-stats hud-bottom-left">
         <div class="corner-stat health" data-class-low="health < 25">
             <span class="value">{{ health }}</span>
-            <span class="label">HP</span>
+            <span class="label">HEALTH</span>
         </div>
+        <div class="cluster-divider"></div>
         <div class="corner-stat armor" data-if="armor > 0">
             <span class="value">{{ armor }}</span>
-            <span class="label">AR</span>
+            <span class="label">ARMOR</span>
         </div>
     </div>
 

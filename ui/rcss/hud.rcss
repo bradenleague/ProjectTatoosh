@@ -809,26 +809,30 @@
 }
 
 .corner-stat .value {
-    font-size: 64dp;
-    font-weight: bold;
-    font-effect: outline(3dp #000000);
+    font-family: Space Grotesk;
+    font-size: 52dp;
+    color: #ffffff;
     line-height: 1em;
 }
 
 .corner-stat .label {
     font-size: 14dp;
-    text-transform: uppercase;
-    letter-spacing: 2dp;
-    color: #666666;
     font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 3dp;
+    color: #888888;
 }
 
-.corner-stat.health .value { color: #ff0000; }
-.corner-stat.armor .value { color: #ffffff; }
-.corner-stat.ammo .value { color: #ffcc00; }
+.corner-stat.health .value { color: #ffffff; }
+.corner-stat.armor .value { color: #dddddd; }
+.corner-stat.ammo .value { color: #ffffff; }
 
 .corner-stat.low .value {
-    animation: pulse 0.4s ease-in-out infinite;
+    color: #dca046;
+}
+
+.corner-stat.low .label {
+    color: #b38040;
 }
 
 .hud-modern .corner-stats.hud-bottom-right {
@@ -852,19 +856,18 @@
 }
 
 .key-icon {
-    width: 24dp;
-    height: 24dp;
-    background-color: rgba(255, 255, 255, 0.1);
-    opacity: 0.2;
+    width: 20dp;
+    height: 20dp;
+    border: 1dp #444444;
 }
 
 .key-icon.owned {
-    opacity: 1.0;
-    border: 2dp #ffffff;
+    border: 1dp #ffffff;
+    background-color: #1a1a1a;
 }
 
-.key-icon.silver.owned { background-color: #cccccc; }
-.key-icon.gold.owned { background-color: #ffcc00; }
+.key-icon.silver.owned { border-color: #ccccdd; }
+.key-icon.gold.owned { border-color: #d2b464; background-color: #2a2210; }
 
 .powerups-row {
     display: flex;
@@ -874,33 +877,34 @@
 .powerup-icon {
     width: 36dp;
     height: 36dp;
-    border: 2dp #ffffff;
+    border: 1dp #666666;
 }
 
 .powerup-icon.quad {
-    background-color: #0066ff;
-    animation: pulse 0.4s ease-in-out infinite;
+    border-color: #6499cc;
+    background-color: #0a1420;
 }
 
 .powerup-icon.pent {
-    background-color: #ff0000;
-    animation: pulse 0.4s ease-in-out infinite;
+    border-color: #cc6644;
+    background-color: #1a0a08;
 }
 
 .powerup-icon.ring {
-    background-color: #ffcc00;
-    animation: pulse 0.6s ease-in-out infinite;
+    border-color: #d2b464;
+    background-color: #1a1508;
 }
 
 .powerup-icon.suit {
-    background-color: #00cc00;
+    border-color: #64b464;
+    background-color: #0a1a0a;
 }
 
 .level-info {
     font-size: 12dp;
-    color: #444444;
+    color: #777777;
     text-transform: uppercase;
-    letter-spacing: 1dp;
+    letter-spacing: 2dp;
 }
 
 .level-info div {
@@ -911,4 +915,24 @@
     position: absolute;
     top: 72dp;
     left: 24dp;
+}
+
+/* --- Hairline divider between stat groups --- */
+
+.cluster-divider {
+    width: 48dp;
+    height: 1dp;
+    background-color: #666666;
+    margin-top: 6dp;
+    margin-bottom: 6dp;
+}
+
+/* --- Weapon readout (contextual label above ammo) --- */
+
+.weapon-readout {
+    font-size: 12dp;
+    color: #555555;
+    text-transform: uppercase;
+    letter-spacing: 2dp;
+    margin-bottom: 4dp;
 }

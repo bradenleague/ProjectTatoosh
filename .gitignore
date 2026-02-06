@@ -33,6 +33,7 @@ tools/
 *.pak
 *.pk3
 progs.dat
+*.lno
 *.bsp
 *.lit
 

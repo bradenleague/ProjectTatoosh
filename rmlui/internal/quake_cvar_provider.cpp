@@ -16,7 +16,7 @@ extern "C" {
     cvar_t* Cvar_FindVar(const char* var_name);
     void Cvar_SetValue(const char* var_name, float value);
     void Cvar_Set(const char* var_name, const char* value);
-    float Cvar_VariableValue(const char* var_name);
+    double Cvar_VariableValue(const char* var_name);
     const char* Cvar_VariableString(const char* var_name);
 }
 

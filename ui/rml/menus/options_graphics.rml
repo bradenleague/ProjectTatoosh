@@ -84,19 +84,19 @@
                         <!-- Texture Quality -->
                         <div class="option-row clickable" onclick="cycle_cvar('texture_quality', 1)">
                             <span class="option-label">Texture Quality</span>
-                            <span class="option-value">{{ texture_quality }}</span>
+                            <span class="option-value">{{ texture_quality_label }}</span>
                         </div>
 
                         <!-- Texture Filter -->
                         <div class="option-row clickable" onclick="cycle_cvar('texture_filter', 1)">
                             <span class="option-label">Texture Filter</span>
-                            <span class="option-value">{{ texture_filter }}</span>
+                            <span class="option-value">{{ texture_filter_label }}</span>
                         </div>
 
                         <!-- Anisotropic Filtering -->
                         <div class="option-row clickable" onclick="cycle_cvar('aniso', 1)">
                             <span class="option-label">Anisotropic Filtering</span>
-                            <span class="option-value">{{ aniso }}x</span>
+                            <span class="option-value">{{ aniso_label }}</span>
                         </div>
 
                         <div class="section-header">Anti-Aliasing</div>
@@ -104,19 +104,19 @@
                         <!-- Anti-Aliasing Samples -->
                         <div class="option-row clickable" onclick="cycle_cvar('msaa', 1)">
                             <span class="option-label">MSAA Samples</span>
-                            <span class="option-value">{{ msaa }}x</span>
+                            <span class="option-value">{{ msaa_label }}</span>
                         </div>
 
                         <!-- Anti-Aliasing Mode -->
                         <div class="option-row clickable" onclick="cycle_cvar('aa_mode', 1)">
                             <span class="option-label">AA Mode</span>
-                            <span class="option-value">{{ aa_mode }}</span>
+                            <span class="option-value">{{ aa_mode_label }}</span>
                         </div>
 
                         <!-- Render Scale -->
                         <div class="option-row clickable" onclick="cycle_cvar('render_scale', 1)">
                             <span class="option-label">Render Scale</span>
-                            <span class="option-value">{{ render_scale }}</span>
+                            <span class="option-value">{{ render_scale_label }}</span>
                         </div>
 
                         <div class="section-header">Effects</div>
@@ -124,7 +124,7 @@
                         <!-- Particles -->
                         <div class="option-row clickable" onclick="cycle_cvar('particles', 1)">
                             <span class="option-label">Particles</span>
-                            <span class="option-value">{{ particles }}</span>
+                            <span class="option-value">{{ particles_label }}</span>
                         </div>
 
                         <!-- Dynamic Lights -->
@@ -132,13 +132,6 @@
                             <span class="option-label">Dynamic Lights</span>
                             <span class="option-value" data-if="dynamic_lights">On</span>
                             <span class="option-value" data-if="!dynamic_lights">Off</span>
-                        </div>
-
-                        <!-- Shadows -->
-                        <div class="option-row clickable" onclick="cycle_cvar('shadows', 1)">
-                            <span class="option-label">Shadows</span>
-                            <span class="option-value" data-if="shadows">On</span>
-                            <span class="option-value" data-if="!shadows">Off</span>
                         </div>
 
                         <!-- Underwater Effects -->

@@ -116,6 +116,7 @@ public:
 
 private:
     static void RegisterAllBindings();
+    static void BindEnumLabel(const char* ui_name);
 
     static Rml::Context* s_context;
     static Rml::DataModelHandle s_model_handle;

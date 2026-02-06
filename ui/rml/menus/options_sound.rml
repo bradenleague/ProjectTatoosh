@@ -34,20 +34,12 @@
                                    onchange="cvar_changed('bgmvolume')" />
                         </div>
 
-                        <!-- Sound Effects Volume -->
-                        <div class="option-row">
-                            <span class="option-label">Effects Volume</span>
-                            <input type="range" class="range" min="0" max="1" step="0.1"
-                                   data-value="sfxvolume"
-                                   onchange="cvar_changed('sfxvolume')" />
-                        </div>
-
                         <div class="section-header">Audio Settings</div>
 
                         <!-- Sound Quality -->
                         <div class="option-row clickable" onclick="cycle_cvar('sound_quality', 1)">
                             <span class="option-label">Sound Quality</span>
-                            <span class="option-value">{{ sound_quality }}</span>
+                            <span class="option-value">{{ sound_quality_label }}</span>
                         </div>
 
                         <!-- Ambient Sounds -->

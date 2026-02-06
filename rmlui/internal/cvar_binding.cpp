@@ -109,7 +109,6 @@ void CvarBindingManager::RegisterAllBindings()
     // Sound
     RegisterFloat("volume",       "volume",     0.0f, 1.0f, 0.05f);
     RegisterFloat("bgmvolume",    "bgmvolume",  0.0f, 1.0f, 0.05f);
-    RegisterFloat("volume",       "sfxvolume",  0.0f, 1.0f, 0.05f);
 
     // Game / Controls
     RegisterFloat("sensitivity",  "sensitivity", 1.0f, 20.0f, 0.5f);
@@ -143,12 +142,10 @@ void CvarBindingManager::RegisterAllBindings()
         RegisterEnum("gl_picmip", "texture_quality", 3, labels);
     }
 
-    // Graphics — texture filter
+    // Graphics — texture filter (vid_filter: 0=Smooth, 1=Classic)
     {
-        // gl_texturemode is a string cvar; map to index for cycling
-        // 0=Nearest, 1=Linear, 2=Trilinear
-        const char* labels[] = {"Nearest", "Linear", "Trilinear"};
-        RegisterEnum("gl_texturemode", "texture_filter", 3, labels);
+        const char* labels[] = {"Smooth", "Classic"};
+        RegisterEnum("vid_filter", "texture_filter", 2, labels);
     }
 
     // Graphics — anisotropy (vid_anisotropic: 1, 2, 4, 8, 16)
@@ -171,10 +168,10 @@ void CvarBindingManager::RegisterAllBindings()
         RegisterEnum("vid_fsaamode", "aa_mode", 3, labels);
     }
 
-    // Graphics — render scale (r_scale: 50, 75, 100, 150, 200 percent)
+    // Graphics — render scale (r_scale: 1=Native, 2=2x, 4=4x)
     {
-        std::vector<int> values = {50, 75, 100, 150, 200};
-        const char* labels[] = {"50%", "75%", "100%", "150%", "200%"};
+        std::vector<int> values = {1, 2, 4};
+        const char* labels[] = {"Native", "2x", "4x"};
         RegisterEnumValues("r_scale", "render_scale", values, labels);
     }
 
@@ -182,13 +179,6 @@ void CvarBindingManager::RegisterAllBindings()
     {
         const char* labels[] = {"Off", "Classic", "Enhanced"};
         RegisterEnum("r_particles", "particles", 3, labels);
-    }
-
-    // Graphics — shadows (r_shadows: 0=Off, 1=On)
-    // Note: r_shadows may not exist in all engine builds; register anyway
-    {
-        const char* labels[] = {"Off", "On"};
-        RegisterEnum("r_shadows", "shadows", 2, labels);
     }
 
     // Graphics — enhanced models (r_enhancedmodels)
@@ -240,22 +230,10 @@ void CvarBindingManager::RegisterAllBindings()
         RegisterEnum("autofastload", "auto_load", 2, labels);
     }
 
-    // Game — fast loading (host_fastload: 0=Off, 1=On)
+    // Game — HUD style (scr_style: 0=Mod, 1=Classic, 2=Minimal)
     {
-        const char* labels[] = {"Off", "On"};
-        RegisterEnum("host_fastload", "fast_loading", 2, labels);
-    }
-
-    // Game — HUD style
-    {
-        const char* labels[] = {"Modern", "Classic"};
-        RegisterEnum("hud_style", "hud_style", 2, labels);
-    }
-
-    // Game — HUD detail
-    {
-        const char* labels[] = {"Minimal", "Full"};
-        RegisterEnum("hud_detail", "hud_detail", 2, labels);
+        const char* labels[] = {"Mod", "Classic", "Minimal"};
+        RegisterEnum("scr_style", "hud_style", 3, labels);
     }
 
     // Game — skill level (skill: 0=Easy, 1=Normal, 2=Hard, 3=Nightmare)
@@ -399,6 +377,35 @@ void CvarBindingManager::RegisterInt(const char* cvar, const char* ui_name,
                cvar, ui_name, min, max);
 }
 
+void CvarBindingManager::BindEnumLabel(const char* ui_name)
+{
+    auto it = s_bindings.find(ui_name);
+    if (it == s_bindings.end() || it->second.enum_labels.empty()) return;
+
+    std::string label_name = std::string(ui_name) + "_label";
+    Rml::DataModelConstructor constructor = s_context->GetDataModel("cvars");
+    if (!constructor) return;
+
+    std::string captured_ui_name = ui_name;
+    constructor.BindFunc(label_name,
+        [captured_ui_name](Rml::Variant& variant) {
+            auto it = s_bindings.find(captured_ui_name);
+            if (it == s_bindings.end()) { variant = Rml::String(""); return; }
+            const auto& b = it->second;
+            int current = 0;
+            auto val_it = s_int_values.find(captured_ui_name);
+            if (val_it != s_int_values.end() && val_it->second)
+                current = *(val_it->second);
+            for (size_t i = 0; i < b.enum_values.size(); i++) {
+                if (b.enum_values[i] == current && i < b.enum_labels.size()) {
+                    variant = Rml::String(b.enum_labels[i]);
+                    return;
+                }
+            }
+            variant = Rml::String(std::to_string(current));
+        });
+}
+
 void CvarBindingManager::RegisterEnum(const char* cvar, const char* ui_name,
                                        int num_values, const char** labels)
 {
@@ -441,6 +448,8 @@ void CvarBindingManager::RegisterEnum(const char* cvar, const char* ui_name,
     } else if (it->second) {
         *(it->second) = value;
     }
+
+    BindEnumLabel(ui_name);
 
     Con_Printf("CvarBindingManager: Registered enum '%s' -> '%s' (%d values)\n",
                cvar, ui_name, num_values);
@@ -490,6 +499,8 @@ void CvarBindingManager::RegisterEnumValues(const char* cvar, const char* ui_nam
     } else if (it->second) {
         *(it->second) = value;
     }
+
+    BindEnumLabel(ui_name);
 
     Con_Printf("CvarBindingManager: Registered enum values '%s' -> '%s' (%d values)\n",
                cvar, ui_name, binding.num_values);

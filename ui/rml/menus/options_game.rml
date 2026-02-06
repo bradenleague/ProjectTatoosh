@@ -37,19 +37,13 @@
                         <!-- Crosshair -->
                         <div class="option-row clickable" onclick="cycle_cvar('crosshair', 1)">
                             <span class="option-label">Crosshair</span>
-                            <span class="option-value">{{ crosshair }}</span>
+                            <span class="option-value">{{ crosshair_label }}</span>
                         </div>
 
                         <!-- HUD Style -->
                         <div class="option-row clickable" onclick="cycle_cvar('hud_style', 1)">
                             <span class="option-label">HUD Style</span>
-                            <span class="option-value">{{ hud_style }}</span>
-                        </div>
-
-                        <!-- HUD Detail -->
-                        <div class="option-row clickable" onclick="cycle_cvar('hud_detail', 1)">
-                            <span class="option-label">HUD Detail</span>
-                            <span class="option-value">{{ hud_detail }}</span>
+                            <span class="option-value">{{ hud_style_label }}</span>
                         </div>
 
                         <!-- Show FPS -->
@@ -86,7 +80,7 @@
                         <!-- Auto Aim -->
                         <div class="option-row clickable" onclick="cycle_cvar('sv_aim', 1)">
                             <span class="option-label">Auto Aim</span>
-                            <span class="option-value">{{ sv_aim }}</span>
+                            <span class="option-value">{{ sv_aim_label }}</span>
                         </div>
 
                         <div class="section-header">View</div>
@@ -110,7 +104,7 @@
                         <!-- Gun Kick -->
                         <div class="option-row clickable" onclick="cycle_cvar('gun_kick', 1)">
                             <span class="option-label">Gun Kick</span>
-                            <span class="option-value">{{ gun_kick }}</span>
+                            <span class="option-value">{{ gun_kick_label }}</span>
                         </div>
 
                         <!-- Show Gun -->
@@ -121,13 +115,6 @@
                         </div>
 
                         <div class="section-header">Loading</div>
-
-                        <!-- Fast Loading -->
-                        <div class="option-row clickable" onclick="cycle_cvar('fast_loading', 1)">
-                            <span class="option-label">Fast Loading</span>
-                            <span class="option-value" data-if="fast_loading">On</span>
-                            <span class="option-value" data-if="!fast_loading">Off</span>
-                        </div>
 
                         <!-- Auto Load -->
                         <div class="option-row clickable" onclick="cycle_cvar('auto_load', 1)">
@@ -148,7 +135,7 @@
                         <!-- Skill Level -->
                         <div class="option-row clickable" onclick="cycle_cvar('skill', 1)">
                             <span class="option-label">Skill</span>
-                            <span class="option-value">{{ skill }}</span>
+                            <span class="option-value">{{ skill_label }}</span>
                         </div>
                     </div>
                 </div>

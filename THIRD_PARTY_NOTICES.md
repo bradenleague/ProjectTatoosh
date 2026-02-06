@@ -31,6 +31,14 @@ Tatoosh includes or links against the following third-party software and assets.
 - **Location:** `ui/fonts/LatoLatin-*.ttf`
 - **License file:** `ui/fonts/LICENSE.txt`
 
+## Space Grotesk Font
+
+- **Source:** https://fonts.google.com/specimen/Space+Grotesk
+- **Author:** Florian Karsten
+- **License:** SIL Open Font License 1.1 (OFL-1.1)
+- **Location:** `ui/fonts/SpaceGrotesk-Bold.ttf`
+- **License file:** https://github.com/floriankarsten/space-grotesk/blob/master/OFL.txt
+
 ## Open Sans Font
 
 - **Source:** https://fonts.google.com/specimen/Open+Sans

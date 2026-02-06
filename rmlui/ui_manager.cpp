@@ -42,6 +42,12 @@ namespace {
 // Debounce window (seconds) to prevent immediate close when a menu was just opened
 constexpr double MENU_DEBOUNCE_SECONDS = 0.1;
 
+// Reference resolution for dp scaling — UI was designed at 1080p
+constexpr float REFERENCE_WIDTH  = 1920.0f;
+constexpr float REFERENCE_HEIGHT = 1080.0f;
+constexpr float DP_RATIO_MIN = 0.5f;
+constexpr float DP_RATIO_MAX = 3.0f;
+
 // Global state
 std::unique_ptr<Tatoosh::RenderInterface_VK> g_render_interface;
 std::unique_ptr<Tatoosh::SystemInterface> g_system_interface;
@@ -87,6 +93,26 @@ const char* GetHudDocumentFromStyle()
         return kHudDocClassic;
     }
     return kHudDocModern;
+}
+
+// Compute and apply dp_ratio based on window size and scr_uiscale cvar.
+// Ensures the UI scales down on small windows and respects user preference.
+void UpdateDpRatio()
+{
+    if (!g_context || g_width <= 0 || g_height <= 0) return;
+
+    float scale_x = static_cast<float>(g_width) / REFERENCE_WIDTH;
+    float scale_y = static_cast<float>(g_height) / REFERENCE_HEIGHT;
+    float base_ratio = (scale_x < scale_y) ? scale_x : scale_y;
+
+    float user_scale = static_cast<float>(Cvar_VariableValue("scr_uiscale"));
+    if (user_scale < DP_RATIO_MIN) user_scale = 1.0f;
+
+    float dp_ratio = base_ratio * user_scale;
+    if (dp_ratio < DP_RATIO_MIN) dp_ratio = DP_RATIO_MIN;
+    if (dp_ratio > DP_RATIO_MAX) dp_ratio = DP_RATIO_MAX;
+
+    g_context->SetDensityIndependentPixelRatio(dp_ratio);
 }
 
 bool IsMenuDocumentPath(const std::string& path)
@@ -384,6 +410,9 @@ static void UI_LoadAssets()
         if (Rml::LoadFontFace(ui_path + "fonts/LatoLatin-BoldItalic.ttf")) {
             Con_Printf("UI_LoadAssets: Loaded LatoLatin-BoldItalic.ttf\n");
         }
+        if (Rml::LoadFontFace(ui_path + "fonts/SpaceGrotesk-Bold.ttf")) {
+            Con_Printf("UI_LoadAssets: Loaded SpaceGrotesk-Bold.ttf\n");
+        }
     } else {
         Con_Printf("UI_LoadAssets: WARNING - No fonts loaded! UI text will not render.\n");
         Con_Printf("UI_LoadAssets: Tried paths:\n");
@@ -539,6 +568,9 @@ void UI_Update(double dt)
 {
     if (!g_initialized || !g_context) return;
 
+    // Recompute dp ratio each frame so scr_uiscale changes take effect live.
+    UpdateDpRatio();
+
     // Note: Pending operations are now processed in UI_ProcessPending()
     // which is called from the main thread before rendering tasks start.
 
@@ -565,6 +597,7 @@ void UI_Resize(int width, int height)
     g_width = width;
     g_height = height;
     g_context->SetDimensions(Rml::Vector2i(width, height));
+    UpdateDpRatio();
 }
 
 int UI_KeyEvent(int key, int scancode, int pressed, int repeat)

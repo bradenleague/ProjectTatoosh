@@ -1,6 +1,7 @@
 /*
  * Tatoosh - Widget Stylesheet
  *
+ * Brutalist design: monochrome + amber accent.
  * Styles for form elements: buttons, sliders, checkboxes, inputs, etc.
  * Import after base.rcss.
  */
@@ -11,80 +12,80 @@
 
 button, .btn {
     display: inline-block;
-    background-color: rgba(35, 60, 95, 0.9);
-    border: 1dp #3a5080;
-    border-radius: 4dp;
+    background-color: transparent;
+    border: 2dp #ffffff;
     padding: 10dp 20dp;
-    color: #c0d0e0;
-    font-size: 16dp;
-    font-family: LatoLatin;
+    color: #ffffff;
+    font-family: Space Grotesk;
+    font-size: 14dp;
+    font-weight: bold;
     text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1dp;
     cursor: pointer;
-    transition: background-color 0.12s, border-color 0.12s, transform 0.08s;
+    transition: background-color 0.1s, border-color 0.1s, color 0.1s;
 }
 
 button:hover, .btn:hover {
-    background-color: rgba(45, 80, 125, 0.95);
-    border-color: #4a70a0;
-    color: #e0f0ff;
+    background-color: #ffffff;
+    border-color: #ffffff;
+    color: #000000;
 }
 
 button:active, .btn:active {
-    background-color: rgba(55, 100, 155, 1.0);
-    border-color: #5a90c0;
-    transform: scale(0.98);
+    background-color: #ffffff;
+    border-color: #ffffff;
+    color: #000000;
 }
 
 button:disabled, .btn:disabled {
-    background-color: rgba(25, 35, 50, 0.6);
-    border-color: #2a3545;
-    color: #506070;
+    background-color: transparent;
+    border-color: #333333;
+    color: #444444;
     cursor: default;
 }
 
 button:disabled:hover, .btn:disabled:hover {
-    transform: none;
+    background-color: transparent;
+    border-color: #333333;
+    color: #444444;
 }
 
 /* Button variants */
 .btn-primary {
-    background-color: rgba(45, 90, 150, 0.95);
-    border-color: #4090d0;
+    background-color: transparent;
+    border-color: #ffcc00;
+    color: #ffcc00;
 }
 
 .btn-primary:hover {
-    background-color: rgba(55, 110, 180, 1.0);
-    border-color: #50a0e0;
-}
-
-.btn-success {
-    background-color: rgba(35, 100, 70, 0.9);
-    border-color: #309060;
-}
-
-.btn-success:hover {
-    background-color: rgba(45, 125, 85, 0.95);
-    border-color: #40b070;
+    background-color: #ffcc00;
+    border-color: #ffcc00;
+    color: #000000;
 }
 
 .btn-danger {
-    background-color: rgba(120, 35, 35, 0.9);
-    border-color: #a03535;
+    background-color: transparent;
+    border-color: #ff3333;
+    color: #ff3333;
 }
 
 .btn-danger:hover {
-    background-color: rgba(150, 45, 45, 0.95);
-    border-color: #c04545;
+    background-color: #ff3333;
+    border-color: #ff3333;
+    color: #ffffff;
 }
 
 .btn-ghost {
     background-color: transparent;
-    border-color: #4a6080;
+    border-color: #333333;
+    color: #666666;
 }
 
 .btn-ghost:hover {
-    background-color: rgba(40, 60, 90, 0.5);
-    border-color: #5a7090;
+    background-color: #1a1a1a;
+    border-color: #ffffff;
+    color: #ffffff;
 }
 
 /* ============================================
@@ -94,32 +95,26 @@ button:disabled:hover, .btn:disabled:hover {
 input.text, textarea, .input {
     display: block;
     width: 100%;
-    background-color: rgba(8, 14, 22, 0.95);
-    border: 1dp #2a4060;
-    border-radius: 3dp;
-    padding: 10dp 14dp;
-    color: #e0f0ff;
+    background-color: transparent;
+    border-width: 0;
+    border-bottom: 2dp #333333;
+    padding: 10dp 4dp;
+    color: #ffffff;
     font-size: 16dp;
     font-family: LatoLatin;
 }
 
 input.text:hover, textarea:hover, .input:hover {
-    border-color: #3a5080;
+    border-bottom-color: #666666;
 }
 
 input.text:focus, textarea:focus, .input:focus {
-    border-color: #4090d0;
-    background-color: rgba(12, 20, 30, 0.98);
+    border-bottom-color: #ffcc00;
 }
 
 input.text:disabled, textarea:disabled, .input:disabled {
-    background-color: rgba(15, 20, 28, 0.7);
-    border-color: #1a2535;
-    color: #506070;
-}
-
-input.text::placeholder {
-    color: #506070;
+    border-bottom-color: #1a1a1a;
+    color: #444444;
 }
 
 textarea {
@@ -133,24 +128,19 @@ textarea {
 input.checkbox {
     width: 20dp;
     height: 20dp;
-    background-color: rgba(8, 14, 22, 0.95);
-    border: 2dp #2a4060;
-    border-radius: 3dp;
+    background-color: transparent;
+    border: 2dp #ffffff;
     cursor: pointer;
 }
 
 input.checkbox:hover {
-    border-color: #3a5080;
-    background-color: rgba(15, 25, 38, 0.95);
+    border-color: #ffcc00;
 }
 
 input.checkbox:checked {
-    background-color: rgba(45, 90, 150, 0.95);
-    border-color: #4090d0;
+    background-color: #ffcc00;
+    border-color: #ffcc00;
 }
-
-/* Checkbox checkmark - RmlUI doesn't support ::before pseudo-elements with content */
-/* Visual feedback handled by background color change on :checked state */
 
 /* ============================================
    Radio Buttons
@@ -159,23 +149,20 @@ input.checkbox:checked {
 input.radio {
     width: 20dp;
     height: 20dp;
-    background-color: rgba(8, 14, 22, 0.95);
-    border: 2dp #2a4060;
+    background-color: transparent;
+    border: 2dp #ffffff;
     border-radius: 10dp;
     cursor: pointer;
 }
 
 input.radio:hover {
-    border-color: #3a5080;
+    border-color: #ffcc00;
 }
 
 input.radio:checked {
-    background-color: rgba(8, 14, 22, 0.95);
-    border-color: #4090d0;
+    background-color: #ffcc00;
+    border-color: #ffcc00;
 }
-
-/* Radio button inner dot - RmlUI doesn't support ::before pseudo-elements with content */
-/* Visual feedback handled by background color change on :checked state */
 
 /* ============================================
    Sliders / Range Inputs
@@ -186,33 +173,25 @@ input.range {
 }
 
 input.range slidertrack {
-    height: 6dp;
-    background-color: rgba(20, 35, 55, 0.9);
-    border: 1dp #2a4060;
-    border-radius: 3dp;
-}
-
-input.range slidertrack:hover {
-    border-color: #3a5080;
+    height: 2dp;
+    background-color: #333333;
+    border-width: 0;
 }
 
 input.range sliderbar {
-    width: 18dp;
-    height: 18dp;
-    background-color: #4090d0;
-    border: 2dp #50a0e0;
-    border-radius: 9dp;
-    margin-top: -6dp;
+    width: 16dp;
+    height: 16dp;
+    background-color: #ffffff;
+    border-width: 0;
+    margin-top: -7dp;
 }
 
 input.range sliderbar:hover {
-    background-color: #50a0e0;
-    border-color: #60b0f0;
-    transform: scale(1.1);
+    background-color: #ffcc00;
 }
 
 input.range sliderbar:active {
-    background-color: #60b0f0;
+    background-color: #ffcc00;
 }
 
 input.range sliderarrowdec,
@@ -221,49 +200,21 @@ input.range sliderarrowinc {
     display: none;
 }
 
-/* Filled slider track (shows value) */
-input.range slidertrack fill {
-    background-color: rgba(64, 144, 208, 0.6);
-    border-radius: 2dp;
-}
-
 /* ============================================
    Tooltip
    ============================================ */
 
 .tooltip {
     position: absolute;
-    background-color: rgba(10, 16, 24, 0.98);
-    border: 1dp #3a5080;
-    border-radius: 4dp;
+    background-color: #111111;
+    border: 2dp #ffffff;
     padding: 8dp 12dp;
     font-size: 14dp;
-    color: #d0e0f0;
+    color: #ffffff;
     max-width: 250dp;
     pointer-events: none;
     animation: fade-in 0.15s ease-out;
     z-index: 1000;
-}
-
-.tooltip-arrow {
-    position: absolute;
-    width: 0;
-    height: 0;
-    border: 6dp transparent;
-}
-
-.tooltip-arrow.top {
-    bottom: -12dp;
-    left: 50%;
-    transform: translateX(-50%);
-    border-top-color: #3a5080;
-}
-
-.tooltip-arrow.bottom {
-    top: -12dp;
-    left: 50%;
-    transform: translateX(-50%);
-    border-bottom-color: #3a5080;
 }
 
 /* ============================================
@@ -277,19 +228,19 @@ input.range slidertrack fill {
 .form-label {
     display: block;
     font-size: 14dp;
-    color: #8090a0;
+    color: #666666;
     margin-bottom: 6dp;
 }
 
 .form-hint {
     font-size: 12dp;
-    color: #6080a0;
+    color: #666666;
     margin-top: 4dp;
 }
 
 .form-error {
     font-size: 12dp;
-    color: #e04040;
+    color: #ff3333;
     margin-top: 4dp;
 }
 
@@ -302,4 +253,3 @@ input.range slidertrack fill {
 .form-row > * {
     flex: 1;
 }
-

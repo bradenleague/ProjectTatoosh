@@ -1,7 +1,8 @@
 /*
  * Tatoosh - Menu Stylesheet
  *
- * Styles for menu screens: main menu, options, load/save, etc.
+ * Brutalist design: monochrome + amber accent.
+ * Styles for options, singleplayer, multiplayer, load/save, dialogs, keybinds.
  * Import after base.rcss.
  */
 
@@ -12,10 +13,11 @@
 .menu-overlay {
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color: rgba(0, 0, 0, 0.92);
     display: flex;
     justify-content: center;
     align-items: center;
+    animation: fade-in 0.15s ease-out;
 }
 
 .menu-container {
@@ -23,7 +25,6 @@
     max-width: 90%;
     max-height: 90%;
     overflow: auto;
-    animation: fade-in 0.2s ease-out;
     display: block;
 }
 
@@ -40,96 +41,43 @@
    ============================================ */
 
 .panel {
-    background-color: rgba(12, 18, 28, 0.95);
-    border: 1dp #2a4060;
+    background-color: #111111;
+    border-left: 3dp #ffcc00;
     padding: 32dp;
     width: 100%;
     display: block;
 }
 
-.panel.main-panel {
-    background-color: rgba(10, 16, 26, 0.92);
-    border-color: #1e3450;
-    padding: 40dp 48dp;
-}
-
-.panel-dark {
-    background-color: rgba(8, 12, 20, 0.98);
-    border-color: #1a3050;
-}
-
 .panel-header {
-    background-color: rgba(20, 40, 70, 0.9);
-    border-bottom: 2dp #3060a0;
-    padding: 16dp 24dp;
-    margin: -32dp -32dp 24dp -32dp;
-    border-radius: 6dp 6dp 0 0;
+    border-bottom: 2dp #333333;
+    padding: 0 0 16dp 0;
+    margin-bottom: 24dp;
     display: block;
 }
 
 .panel-header h1 {
     margin: 0;
-    font-size: 28dp;
-    color: #60c0ff;
+    font-family: Space Grotesk;
+    font-size: 32dp;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 4dp;
 }
 
 .panel-header h2 {
     margin: 0;
-    font-size: 22dp;
-    color: #4090e0;
+    font-family: Space Grotesk;
+    font-size: 32dp;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 4dp;
 }
 
 .panel-footer {
-    background-color: rgba(15, 25, 40, 0.9);
-    border-top: 1dp #2a4060;
-    padding: 16dp 24dp;
-    margin: 24dp -32dp -32dp -32dp;
-    border-radius: 0 0 6dp 6dp;
+    border-top: 1dp #333333;
+    padding: 16dp 0 0 0;
+    margin-top: 24dp;
     display: block;
-}
-
-/* ============================================
-   Menu Title
-   ============================================ */
-
-.menu-title {
-    text-align: center;
-    margin-bottom: 40dp;
-}
-
-.menu-title h1,
-.menu-title .game-title {
-    font-size: 48dp;
-    color: #ffffff;
-    margin-bottom: 12dp;
-    letter-spacing: 8dp;
-    font-effect: glow(3dp rgba(96, 192, 255, 0.5));
-}
-
-.menu-subtitle {
-    font-size: 14dp;
-    color: #6888a8;
-    letter-spacing: 2dp;
-    text-transform: uppercase;
-}
-
-.menu-version {
-    font-size: 11dp;
-    color: #405060;
-}
-
-/* ============================================
-   Menu Footer
-   ============================================ */
-
-.menu-footer {
-    margin-top: 32dp;
-    padding-top: 20dp;
-    text-align: center;
-}
-
-.menu-footer .menu-version {
-    margin-top: 16dp;
 }
 
 /* ============================================
@@ -139,84 +87,89 @@
 .menu-nav {
     display: flex;
     flex-direction: column;
-    gap: 10dp;
+    gap: 0;
 }
 
 .menu-item {
     display: block;
-    background-color: rgba(25, 40, 60, 0.5);
-    border: 1dp #2a4060;
-    padding: 16dp 24dp;
-    color: #b0c4d8;
-    font-size: 16dp;
-    text-align: center;
-    cursor: pointer;
+    background-color: transparent;
+    border-left: 3dp transparent;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    padding: 14dp 20dp;
+    color: #ffffff;
+    font-family: Space Grotesk;
+    font-size: 14dp;
+    font-weight: bold;
+    text-align: left;
+    text-transform: uppercase;
     letter-spacing: 1dp;
-    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+    cursor: pointer;
+    transition: background-color 0.1s, border-color 0.1s, color 0.1s;
 }
 
 .menu-item:hover {
-    background-color: rgba(40, 70, 110, 0.7);
-    border-color: #4080c0;
+    background-color: #1a1a1a;
+    border-left: 3dp #ffcc00;
     color: #ffffff;
 }
 
 .menu-item:active {
-    background-color: rgba(50, 90, 140, 0.85);
-    border-color: #60a0e0;
+    background-color: #ffcc00;
+    border-left: 3dp #ffcc00;
+    color: #000000;
 }
 
 .menu-item:disabled {
-    background-color: rgba(20, 30, 45, 0.4);
-    border-color: #1a2535;
-    color: #4a5a6a;
+    background-color: transparent;
+    color: #444444;
     cursor: default;
 }
 
 .menu-item:disabled:hover {
-    background-color: rgba(20, 30, 45, 0.4);
-    border-color: #1a2535;
-    color: #4a5a6a;
+    background-color: transparent;
+    border-left: 3dp transparent;
+    color: #444444;
 }
 
-/* Primary menu item (highlighted action) */
+/* Primary menu item */
 .menu-item.primary {
-    background-color: rgba(40, 100, 160, 0.7);
-    border-color: #4090d0;
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 17dp;
+    color: #ffcc00;
+    font-size: 15dp;
 }
 
 .menu-item.primary:hover {
-    background-color: rgba(50, 120, 190, 0.85);
-    border-color: #60b0f0;
+    background-color: #1a1a1a;
+    color: #ffd633;
 }
 
-/* Secondary menu item (less prominent) */
-.menu-item.secondary {
-    background-color: rgba(20, 30, 45, 0.4);
-    border-color: #1e3348;
-    color: #7890a8;
-    font-size: 14dp;
-    padding: 12dp 20dp;
+.menu-item.primary:active {
+    background-color: #ffcc00;
+    color: #000000;
 }
 
-.menu-item.secondary:hover {
-    background-color: rgba(30, 45, 65, 0.5);
-    border-color: #2a4560;
-    color: #a0b8d0;
-}
-
-/* Danger menu item (quit, delete) */
+/* Danger menu item */
 .menu-item.danger {
-    background-color: rgba(100, 30, 30, 0.6);
-    border-color: #703030;
+    color: #ff3333;
 }
 
 .menu-item.danger:hover {
-    background-color: rgba(140, 40, 40, 0.75);
-    border-color: #c04040;
+    background-color: #ff3333;
+    border-left: 3dp #ff3333;
+    color: #ffffff;
+}
+
+/* Secondary menu item */
+.menu-item.secondary {
+    color: #666666;
+    font-size: 13dp;
+    padding: 10dp 20dp;
+}
+
+.menu-item.secondary:hover {
+    color: #ffffff;
+    background-color: #1a1a1a;
 }
 
 /* ============================================
@@ -227,7 +180,7 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 4dp;
+    gap: 0;
     width: 100%;
 }
 
@@ -236,18 +189,17 @@
     justify-content: space-between;
     align-items: center;
     padding: 10dp 12dp;
-    background-color: rgba(20, 35, 55, 0.5);
-    border-radius: 3dp;
+    border-bottom: 1dp #1a1a1a;
     width: 100%;
+    transition: background-color 0.1s;
 }
 
 .option-label {
     flex: 0 0 220dp;
-    color: #c0d0e0;
+    color: #ffffff;
     font-size: 16dp;
 }
 
-/* Ensure range inputs have a usable hit area inside option rows. */
 .option-row input.range {
     display: block;
     width: 260dp;
@@ -258,23 +210,22 @@
 }
 
 .option-row:hover {
-    background-color: rgba(25, 45, 70, 0.6);
+    background-color: #1a1a1a;
 }
 
 .option-value {
-    color: #60c0ff;
+    color: #ffcc00;
     font-size: 16dp;
     min-width: 120dp;
     text-align: right;
 }
 
-/* Clickable option row for cycling values */
 .option-row.clickable {
     cursor: pointer;
 }
 
 .option-row.clickable:hover .option-value {
-    color: #80d0ff;
+    color: #ffd633;
 }
 
 /* ============================================
@@ -282,21 +233,22 @@
    ============================================ */
 
 .section-divider {
-    height: 1dp;
-    background-color: #2a4060;
+    height: 2dp;
+    background-color: #333333;
     margin: 20dp 0;
 }
 
 .section-header {
-    font-size: 14dp;
+    font-family: Space Grotesk;
+    font-size: 18dp;
     font-weight: bold;
-    color: #6090c0;
+    color: #ffcc00;
     text-transform: uppercase;
-    letter-spacing: 1dp;
+    letter-spacing: 2dp;
     margin-top: 24dp;
     margin-bottom: 12dp;
     padding-bottom: 8dp;
-    border-bottom: 1dp #2a4060;
+    border-bottom: 1dp #333333;
 }
 
 /* ============================================
@@ -310,7 +262,7 @@
 
 .dialog-message {
     font-size: 18dp;
-    color: #d0e0f0;
+    color: #ffffff;
     margin-bottom: 24dp;
     line-height: 1.5;
 }
@@ -323,6 +275,24 @@
 
 .dialog-buttons .menu-item {
     min-width: 100dp;
+    border: 2dp #333333;
+    text-align: center;
+}
+
+.dialog-buttons .menu-item:hover {
+    border: 2dp #ffffff;
+    background-color: #1a1a1a;
+}
+
+.dialog-buttons .menu-item.danger {
+    border: 2dp #ff3333;
+    color: #ff3333;
+}
+
+.dialog-buttons .menu-item.danger:hover {
+    background-color: #ff3333;
+    border: 2dp #ff3333;
+    color: #ffffff;
 }
 
 /* ============================================
@@ -334,46 +304,46 @@
     justify-content: space-between;
     align-items: center;
     padding: 10dp 12dp;
-    background-color: rgba(20, 35, 55, 0.5);
-    border-radius: 3dp;
+    border-bottom: 1dp #1a1a1a;
     cursor: pointer;
     width: 100%;
+    transition: background-color 0.1s;
 }
 
 .keybind-row:hover {
-    background-color: rgba(25, 45, 70, 0.6);
+    background-color: #1a1a1a;
 }
 
 .keybind-action {
-    color: #c0d0e0;
+    color: #ffffff;
     font-size: 15dp;
     flex: 1 1 auto;
     min-width: 0;
 }
 
 .keybind-key {
-    font-family: LatoLatin;
+    font-family: Space Grotesk;
     font-size: 14dp;
-    color: #60c0ff;
-    background-color: rgba(40, 70, 110, 0.6);
-    border: 1dp #3060a0;
-    border-radius: 3dp;
+    font-weight: bold;
+    color: #ffcc00;
+    background-color: transparent;
+    border: 2dp #333333;
     padding: 4dp 12dp;
     min-width: 80dp;
     text-align: center;
     flex: 0 0 140dp;
+    text-transform: uppercase;
 }
 
 .keybind-row:hover .keybind-key {
-    border-color: #4080c0;
-    background-color: rgba(50, 90, 140, 0.7);
+    border-color: #ffcc00;
 }
 
 .keybind-row.capturing .keybind-key {
-    background-color: rgba(80, 120, 180, 0.9);
-    border-color: #60a0e0;
-    color: #ffffff;
-    animation: pulse 1s ease-in-out infinite;
+    background-color: #ffcc00;
+    border-color: #ffcc00;
+    color: #000000;
+    animation: blink 1s step-start infinite;
 }
 
 /* ============================================
@@ -385,15 +355,15 @@
     justify-content: space-between;
     align-items: center;
     padding: 12dp 16dp;
-    background-color: rgba(20, 35, 55, 0.5);
-    border: 1dp #2a4060;
-    border-radius: 4dp;
+    border-bottom: 1dp #1a1a1a;
     cursor: pointer;
+    transition: background-color 0.1s;
 }
 
 .save-slot:hover {
-    background-color: rgba(30, 50, 80, 0.6);
-    border-color: #3a5080;
+    background-color: #1a1a1a;
+    border-left: 3dp #ffcc00;
+    padding-left: 13dp;
 }
 
 .save-slot-info {
@@ -402,26 +372,25 @@
 
 .save-slot-name {
     font-size: 16dp;
-    color: #d0e0f0;
+    color: #ffffff;
     margin-bottom: 4dp;
 }
 
 .save-slot-details {
     font-size: 12dp;
-    color: #6080a0;
+    color: #666666;
 }
 
 .save-slot-empty {
-    color: #506070;
+    color: #444444;
     font-style: italic;
 }
 
 .save-slot-thumbnail {
     width: 80dp;
     height: 60dp;
-    background-color: rgba(10, 20, 30, 0.8);
-    border: 1dp #2a4060;
-    border-radius: 2dp;
+    background-color: #1a1a1a;
+    border: 1dp #333333;
     margin-left: 12dp;
 }
 
@@ -433,19 +402,20 @@
     position: absolute;
     top: 24dp;
     left: 24dp;
+    font-family: Space Grotesk;
     font-size: 14dp;
+    font-weight: bold;
     padding: 8dp 16dp;
-    background-color: rgba(30, 50, 80, 0.6);
-    border: 1dp #2a4060;
-    border-radius: 3dp;
-    color: #a0b0c0;
+    background-color: transparent;
+    border: 2dp #333333;
+    color: #ffffff;
+    text-transform: uppercase;
     cursor: pointer;
 }
 
 .back-button:hover {
-    background-color: rgba(40, 70, 110, 0.7);
-    border-color: #3a5080;
-    color: #c0d0e0;
+    background-color: #1a1a1a;
+    border-color: #ffffff;
 }
 
 /* ============================================
@@ -460,122 +430,52 @@
     display: block;
 }
 
-/* Scrollbar styling */
+/* Scrollbar — flat, minimal */
 .scroll-area scrollbarvertical {
-    width: 10dp;
+    width: 8dp;
     margin-left: 4dp;
 }
 
 .scroll-area scrollbarvertical slidertrack {
-    background-color: rgba(20, 35, 55, 0.6);
-    border-radius: 5dp;
+    background-color: #1a1a1a;
 }
 
 .scroll-area scrollbarvertical sliderbar {
-    background-color: rgba(60, 100, 150, 0.7);
-    border-radius: 5dp;
+    background-color: #333333;
     min-height: 30dp;
 }
 
 .scroll-area scrollbarvertical sliderbar:hover {
-    background-color: rgba(80, 130, 180, 0.8);
+    background-color: #ffcc00;
 }
 
 /* ============================================
-   Main Menu (Simplified)
+   Menu Footer
    ============================================ */
 
-.menu-body {
-    background-color: rgba(0, 0, 0, 0.9);
-}
-
-.main-menu-panel {
-    width: 400dp;
-    margin-top: 100dp;
-    margin-left: auto;
-    margin-right: auto;
-    padding-top: 40dp;
-    padding-bottom: 40dp;
-    padding-left: 48dp;
-    padding-right: 48dp;
-    background-color: rgba(10, 16, 26, 0.95);
-    border-width: 1dp;
-    border-color: #1e3450;
+.menu-footer {
+    margin-top: 32dp;
+    padding-top: 20dp;
     text-align: center;
 }
 
-.main-menu-title {
-    font-size: 48dp;
-    color: #ffffff;
-    margin-bottom: 8dp;
-    letter-spacing: 6dp;
-}
-
-.main-menu-subtitle {
-    font-size: 13dp;
-    color: #607890;
-    letter-spacing: 1dp;
+.menu-title {
+    text-align: center;
     margin-bottom: 40dp;
 }
 
-.main-menu-buttons {
-    margin-bottom: 32dp;
-}
-
-.menu-btn {
-    display: block;
-    background-color: rgba(25, 40, 60, 0.6);
-    border-width: 1dp;
-    border-color: #2a4060;
-    padding-top: 14dp;
-    padding-bottom: 14dp;
-    padding-left: 24dp;
-    padding-right: 24dp;
-    margin-bottom: 8dp;
-    color: #b0c4d8;
-    font-size: 16dp;
-    cursor: pointer;
-}
-
-.menu-btn:hover {
-    background-color: rgba(40, 70, 110, 0.7);
-    border-color: #4080c0;
-    color: #ffffff;
-}
-
-.menu-btn:active {
-    background-color: rgba(50, 90, 140, 0.8);
-}
-
-.menu-btn.primary {
-    background-color: rgba(40, 100, 160, 0.7);
-    border-color: #4090d0;
-    color: #ffffff;
-    font-size: 17dp;
-}
-
-.menu-btn.primary:hover {
-    background-color: rgba(50, 120, 190, 0.85);
-    border-color: #60b0f0;
-}
-
-.menu-btn.quit {
-    margin-top: 16dp;
-    background-color: rgba(20, 30, 45, 0.5);
-    border-color: #1e3348;
-    color: #708090;
+.menu-subtitle {
     font-size: 14dp;
+    color: #666666;
+    letter-spacing: 2dp;
+    text-transform: uppercase;
 }
 
-.menu-btn.quit:hover {
-    background-color: rgba(80, 40, 40, 0.6);
-    border-color: #804040;
-    color: #c0a0a0;
-}
-
-.main-menu-version {
+.menu-version {
     font-size: 11dp;
-    color: #405060;
-    margin-top: 0;
-    margin-bottom: 0;
+    color: #444444;
+}
+
+.menu-footer .menu-version {
+    margin-top: 16dp;
 }

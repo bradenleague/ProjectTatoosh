@@ -230,9 +230,9 @@ void CvarBindingManager::RegisterAllBindings()
         RegisterEnum("autofastload", "auto_load", 2, labels);
     }
 
-    // Game — HUD style (scr_style: 0=Mod, 1=Classic, 2=Minimal)
+    // Game — HUD style (scr_style: 0=Simple, 1=Classic, 2=Modern)
     {
-        const char* labels[] = {"Mod", "Classic", "Minimal"};
+        const char* labels[] = {"Simple", "Classic", "Modern"};
         RegisterEnum("scr_style", "hud_style", 3, labels);
     }
 

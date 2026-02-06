@@ -18,6 +18,7 @@
 #include <SDL.h>
 #include <algorithm>
 #include <cstdio>
+#include <cstring>
 #include <unordered_map>
 #include <string>
 #include <vector>
@@ -27,6 +28,7 @@
 extern "C" {
     extern double realtime;  // vkQuake's time reference
     void Con_Printf(const char* fmt, ...);
+    double Cvar_VariableValue(const char* var_name);
     void IN_Activate(void);
     void IN_Deactivate(int clear);
     void IN_EndIgnoringMouseEvents(void);
@@ -70,6 +72,22 @@ bool g_pending_close_all = false;  // Request to close all menus at next update
 std::unordered_map<std::string, Rml::ElementDocument*> g_documents;
 std::string g_ui_base_path;       // Base path for UI assets (set during font loading)
 std::string g_engine_base_path;   // com_basedir passed from engine
+
+const char* kHudDocSimple = "ui/rml/hud.rml";
+const char* kHudDocClassic = "ui/rml/hud/hud_classic.rml";
+const char* kHudDocModern = "ui/rml/hud/hud_modern.rml";
+
+const char* GetHudDocumentFromStyle()
+{
+    const double style = Cvar_VariableValue("scr_style");
+    if (style < 1.0) {
+        return kHudDocSimple;
+    }
+    if (style < 2.0) {
+        return kHudDocClassic;
+    }
+    return kHudDocModern;
+}
 
 bool IsMenuDocumentPath(const std::string& path)
 {
@@ -993,11 +1011,17 @@ void UI_PopMenu(void)
 void UI_ShowHUD(const char* hud_document)
 {
     if (!hud_document) {
-        hud_document = "ui/rml/hud/hud_classic.rml";
+        hud_document = GetHudDocumentFromStyle();
+    }
+
+    const bool hud_changed = !g_current_hud || std::strcmp(g_current_hud, hud_document) != 0;
+    if (!hud_changed && g_hud_visible) {
+        UI_SetInputMode(UI_INPUT_OVERLAY);
+        return;
     }
 
     // Hide previous HUD if different
-    if (g_current_hud && g_current_hud != hud_document && g_hud_visible) {
+    if (g_current_hud && hud_changed && g_hud_visible) {
         UI_HideDocument(g_current_hud);
     }
 
@@ -1083,6 +1107,12 @@ void UI_SyncGameState(const int* stats, int items,
     if (g_hud_visible && !UI_WantsMenuInput()) {
         if (UI_GetInputMode() == UI_INPUT_INACTIVE) {
             UI_SetInputMode(UI_INPUT_OVERLAY);
+        }
+
+        // Hot-swap HUD document when style cvar changes while in-game.
+        const char* desired_hud = GetHudDocumentFromStyle();
+        if (!g_current_hud || std::strcmp(g_current_hud, desired_hud) != 0) {
+            UI_ShowHUD(desired_hud);
         }
     }
 

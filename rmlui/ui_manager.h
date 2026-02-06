@@ -66,7 +66,7 @@ void UI_PushMenu(const char* path);   /* Open menu, set MENU_ACTIVE */
 void UI_PopMenu(void);            /* Pop current menu from stack */
 
 /* HUD control */
-void UI_ShowHUD(const char* hud_document);   /* NULL = default hud_classic.rml */
+void UI_ShowHUD(const char* hud_document);   /* NULL = resolve from scr_style */
 void UI_HideHUD(void);
 int UI_IsHUDVisible(void);
 

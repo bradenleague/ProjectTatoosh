@@ -24,14 +24,14 @@
 
                     <div class="section-header">Player Color</div>
 
-                    <div class="option-row clickable" onclick="cycle_cvar('_cl_color_top', 1)">
+                    <div class="option-row clickable" onclick="cycle_cvar('cl_color_top', 1)">
                         <span class="option-label">Shirt Color</span>
-                        <span class="option-value">{{ _cl_color_top }}</span>
+                        <span class="option-value">{{ cl_color_top }}</span>
                     </div>
 
-                    <div class="option-row clickable" onclick="cycle_cvar('_cl_color_bottom', 1)">
+                    <div class="option-row clickable" onclick="cycle_cvar('cl_color_bottom', 1)">
                         <span class="option-label">Pants Color</span>
-                        <span class="option-value">{{ _cl_color_bottom }}</span>
+                        <span class="option-value">{{ cl_color_bottom }}</span>
                     </div>
                 </div>
 

@@ -916,6 +916,14 @@ void UI_PushMenu(const char* path)
     g_pending_escape = false;
     g_pending_close_all = false;
 
+    // Sync cvar backing stores with current engine values BEFORE loading or
+    // showing the document.  LoadDocument() creates elements that read the data
+    // model immediately, and Show() on an already-loaded document relies on the
+    // dirty-data mechanism to refresh elements on the next Update().
+    if (Tatoosh::CvarBindingManager::IsInitialized()) {
+        Tatoosh::CvarBindingManager::SyncToUI();
+    }
+
     // Load document if not already loaded
     auto it = g_documents.find(path);
     if (it == g_documents.end() || !it->second) {
@@ -945,10 +953,6 @@ void UI_PushMenu(const char* path)
     g_menu_stack.push_back(path);
     Rml::ElementDocument* doc = g_documents[path];
     doc->Show();
-
-    if (Tatoosh::CvarBindingManager::IsInitialized()) {
-        Tatoosh::CvarBindingManager::SyncToUI();
-    }
 
     // Set menu mode
     UI_SetInputMode(UI_INPUT_MENU_ACTIVE);

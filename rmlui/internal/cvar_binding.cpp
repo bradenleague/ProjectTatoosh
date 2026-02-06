@@ -86,15 +86,193 @@ bool CvarBindingManager::Initialize(Rml::Context* context)
         return false;
     }
 
-    // The actual bindings will be registered later via Register* functions
-    // We'll bind scalar getters that look up values from our maps
-
     s_model_handle = constructor.GetModelHandle();
     s_context = context;
     s_initialized = true;
 
-    Con_Printf("CvarBindingManager: Initialized successfully\n");
+    RegisterAllBindings();
+
+    Con_Printf("CvarBindingManager: Initialized with %zu bindings\n", s_bindings.size());
     return true;
+}
+
+void CvarBindingManager::RegisterAllBindings()
+{
+    // ── Float cvars (sliders with data-value + cvar_changed) ──
+
+    // Graphics
+    RegisterFloat("fov",          "fov",        50.0f, 130.0f, 5.0f);
+    RegisterFloat("gamma",        "gamma",      0.5f,  2.0f,   0.05f);
+    RegisterFloat("contrast",     "contrast",   0.5f,  2.0f,   0.05f);
+    RegisterFloat("host_maxfps",  "max_fps",    30.0f, 1000.0f, 10.0f);
+
+    // Sound
+    RegisterFloat("volume",       "volume",     0.0f, 1.0f, 0.05f);
+    RegisterFloat("bgmvolume",    "bgmvolume",  0.0f, 1.0f, 0.05f);
+    RegisterFloat("volume",       "sfxvolume",  0.0f, 1.0f, 0.05f);
+
+    // Game / Controls
+    RegisterFloat("sensitivity",  "sensitivity", 1.0f, 20.0f, 0.5f);
+    RegisterFloat("scr_sbaralpha","hud_opacity", 0.0f, 1.0f, 0.05f);
+    RegisterFloat("scr_uiscale",  "ui_scale",   0.5f, 3.0f,  0.25f);
+    RegisterFloat("cl_bob",       "view_bob",   0.0f, 0.05f, 0.005f);
+    RegisterFloat("cl_rollangle", "view_roll",  0.0f, 5.0f,  0.5f);
+
+    // ── Bool cvars (cycle_cvar toggles) ──
+
+    // Graphics
+    RegisterBool("vid_fullscreen",   "fullscreen");
+    RegisterBool("vid_vsync",        "vsync");
+    RegisterBool("vid_palettize",    "palettize");
+    RegisterBool("r_dynamic",        "dynamic_lights");
+    RegisterBool("r_waterwarp",      "underwater_fx");
+    RegisterBool("r_lerpmodels",     "model_interpolation");
+
+    // Game / Controls
+    RegisterBool("m_pitch",          "invert_mouse");  // special: sign-based
+    RegisterBool("cl_alwaysrun",     "always_run");
+    RegisterBool("m_filter",         "m_filter");
+    RegisterBool("r_drawviewmodel",  "show_gun");
+    RegisterBool("cl_startdemos",    "startup_demos");
+
+    // ── Enum cvars (cycle_cvar with display labels) ──
+
+    // Graphics — texture quality (gl_picmip: 0=High, 1=Medium, 2=Low)
+    {
+        const char* labels[] = {"High", "Medium", "Low"};
+        RegisterEnum("gl_picmip", "texture_quality", 3, labels);
+    }
+
+    // Graphics — texture filter
+    {
+        // gl_texturemode is a string cvar; map to index for cycling
+        // 0=Nearest, 1=Linear, 2=Trilinear
+        const char* labels[] = {"Nearest", "Linear", "Trilinear"};
+        RegisterEnum("gl_texturemode", "texture_filter", 3, labels);
+    }
+
+    // Graphics — anisotropy (vid_anisotropic: 1, 2, 4, 8, 16)
+    {
+        std::vector<int> values = {1, 2, 4, 8, 16};
+        const char* labels[] = {"Off", "2x", "4x", "8x", "16x"};
+        RegisterEnumValues("vid_anisotropic", "aniso", values, labels);
+    }
+
+    // Graphics — MSAA (vid_fsaa: 0, 2, 4, 8)
+    {
+        std::vector<int> values = {0, 2, 4, 8};
+        const char* labels[] = {"Off", "2x", "4x", "8x"};
+        RegisterEnumValues("vid_fsaa", "msaa", values, labels);
+    }
+
+    // Graphics — AA mode (vid_fsaamode: 0=Off, 1=FXAA, 2=TAA)
+    {
+        const char* labels[] = {"Off", "FXAA", "TAA"};
+        RegisterEnum("vid_fsaamode", "aa_mode", 3, labels);
+    }
+
+    // Graphics — render scale (r_scale: 50, 75, 100, 150, 200 percent)
+    {
+        std::vector<int> values = {50, 75, 100, 150, 200};
+        const char* labels[] = {"50%", "75%", "100%", "150%", "200%"};
+        RegisterEnumValues("r_scale", "render_scale", values, labels);
+    }
+
+    // Graphics — particles (r_particles: 0=Off, 1=Classic, 2=Enhanced)
+    {
+        const char* labels[] = {"Off", "Classic", "Enhanced"};
+        RegisterEnum("r_particles", "particles", 3, labels);
+    }
+
+    // Graphics — shadows (r_shadows: 0=Off, 1=On)
+    // Note: r_shadows may not exist in all engine builds; register anyway
+    {
+        const char* labels[] = {"Off", "On"};
+        RegisterEnum("r_shadows", "shadows", 2, labels);
+    }
+
+    // Graphics — enhanced models (r_enhancedmodels)
+    {
+        const char* labels[] = {"Off", "On"};
+        RegisterEnum("r_enhancedmodels", "enhanced_models", 2, labels);
+    }
+
+    // Sound — quality (snd_mixspeed: common rates)
+    {
+        std::vector<int> values = {11025, 22050, 44100, 48000};
+        const char* labels[] = {"11 kHz", "22 kHz", "44 kHz", "48 kHz"};
+        RegisterEnumValues("snd_mixspeed", "sound_quality", values, labels);
+    }
+
+    // Sound — ambient (ambient_level mapped to off/low/medium/high)
+    {
+        const char* labels[] = {"Off", "On"};
+        RegisterEnum("ambient_level", "ambient", 2, labels);
+    }
+
+    // Game — crosshair (crosshair: 0=Off, 1=Cross, 2=Dot)
+    {
+        const char* labels[] = {"Off", "Cross", "Dot"};
+        RegisterEnum("crosshair", "crosshair", 3, labels);
+    }
+
+    // Game — show FPS (scr_showfps: 0=Off, 1=On)
+    {
+        const char* labels[] = {"Off", "On"};
+        RegisterEnum("scr_showfps", "show_fps", 2, labels);
+    }
+
+    // Game — aim assist (sv_aim: 0=Off, 1=On)
+    {
+        const char* labels[] = {"Off", "On"};
+        RegisterEnum("sv_aim", "sv_aim", 2, labels);
+    }
+
+    // Game — gun kick (v_gunkick: 0=Off, 1=Classic, 2=Smooth)
+    {
+        const char* labels[] = {"Off", "Classic", "Smooth"};
+        RegisterEnum("v_gunkick", "gun_kick", 3, labels);
+    }
+
+    // Game — auto fast load (autofastload: 0=Off, 1=On)
+    {
+        const char* labels[] = {"Off", "On"};
+        RegisterEnum("autofastload", "auto_load", 2, labels);
+    }
+
+    // Game — fast loading (host_fastload: 0=Off, 1=On)
+    {
+        const char* labels[] = {"Off", "On"};
+        RegisterEnum("host_fastload", "fast_loading", 2, labels);
+    }
+
+    // Game — HUD style
+    {
+        const char* labels[] = {"Modern", "Classic"};
+        RegisterEnum("hud_style", "hud_style", 2, labels);
+    }
+
+    // Game — HUD detail
+    {
+        const char* labels[] = {"Minimal", "Full"};
+        RegisterEnum("hud_detail", "hud_detail", 2, labels);
+    }
+
+    // Game — skill level (skill: 0=Easy, 1=Normal, 2=Hard, 3=Nightmare)
+    {
+        const char* labels[] = {"Easy", "Normal", "Hard", "Nightmare"};
+        RegisterEnum("skill", "skill", 4, labels);
+    }
+
+    // Player setup — colors (_cl_color is a packed int, top = val/16, bottom = val%16)
+    {
+        std::vector<int> values = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+        const char* labels[] = {"White", "Brown", "Blue", "Green", "Red", "Gold",
+                                "Peach", "Purple", "Magenta", "Tan", "Grey",
+                                "Orange", "Yellow", "Olive"};
+        RegisterEnumValues("_cl_color", "cl_color_top", values, labels);
+        RegisterEnumValues("_cl_color", "cl_color_bottom", values, labels);
+    }
 }
 
 void CvarBindingManager::Shutdown()
@@ -353,10 +531,13 @@ void CvarBindingManager::SyncToUI()
 {
     if (!s_initialized) return;
 
-    // Suppress UI change handling for the next update tick. Data binding updates
-    // can emit "change" events while syncing values to the UI.
+    // Suppress UI change handling for the next two update ticks. Data binding
+    // updates emit "change" events when dirty values are pushed to elements.
+    // SyncToUI is often called from within g_context->Update() (via event
+    // processing), so the dirty data may not be processed until the NEXT
+    // Update() call — requiring two frames of suppression.
     s_ignore_ui_changes = true;
-    s_ignore_ui_changes_frames = 1;
+    s_ignore_ui_changes_frames = 2;
 
     for (auto& pair : s_bindings) {
         const CvarBinding& binding = pair.second;

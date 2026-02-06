@@ -115,6 +115,8 @@ public:
     static void CycleEnum(const std::string& ui_name, int delta = 1);
 
 private:
+    static void RegisterAllBindings();
+
     static Rml::Context* s_context;
     static Rml::DataModelHandle s_model_handle;
     static std::unordered_map<std::string, CvarBinding> s_bindings;

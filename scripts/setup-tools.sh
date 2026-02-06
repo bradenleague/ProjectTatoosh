@@ -50,10 +50,15 @@ case "$OS" in
         if [ -x "$FTEQCC" ]; then
             ok "fteqcc already present"
         else
-            warn "No prebuilt macOS binary available — build from source:"
-            printf "    git clone https://github.com/BryanHaley/fteqw-applesilicon /tmp/fteqw\n"
-            printf "    make -C /tmp/fteqw/engine fteqcc\n"
-            printf "    cp /tmp/fteqw/engine/fteqcc %s/fteqcc\n" "$TOOLS_DIR"
+            warn "No prebuilt macOS binary available — building from source..."
+            FTEQW_TMP="/tmp/fteqw"
+            if [ ! -d "$FTEQW_TMP" ]; then
+                git clone https://github.com/BryanHaley/fteqw-applesilicon "$FTEQW_TMP"
+            fi
+            make -C "$FTEQW_TMP/engine" qcc-rel
+            cp "$FTEQW_TMP/engine/release/fteqcc" "$FTEQCC"
+            chmod +x "$FTEQCC"
+            ok "fteqcc built and installed"
         fi
         ;;
     *)

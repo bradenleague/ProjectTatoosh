@@ -6,7 +6,7 @@
 #
 # Requires fteqcc in tools/:
 #   Linux:  tools/fteqcc64  (download from https://fte.triptohell.info/downloads)
-#   macOS:  tools/fteqcc    (build from https://github.com/BryanHaley/fteqw-applesilicon)
+#   macOS:  tools/fteqcc    (build from https://github.com/BryanHaley/fteqw-applesilicon, target: qcc-rel)
 
 set -e
 
@@ -32,8 +32,8 @@ if [ ! -x "$FTEQCC" ]; then
         Darwin)
             echo "Build the Apple Silicon fork:"
             echo "  git clone https://github.com/BryanHaley/fteqw-applesilicon /tmp/fteqw"
-            echo "  make -C /tmp/fteqw/engine fteqcc"
-            echo "  cp /tmp/fteqw/engine/fteqcc tools/fteqcc"
+            echo "  make -C /tmp/fteqw/engine qcc-rel"
+            echo "  cp /tmp/fteqw/engine/release/fteqcc tools/fteqcc"
             ;;
     esac
     exit 1

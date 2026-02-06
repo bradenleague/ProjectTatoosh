@@ -1,7 +1,7 @@
 /*
  * Tatoosh - Menu Stylesheet
  *
- * Brutalist design: monochrome + amber accent.
+ * Brutalist design: monochrome + Quake red accent.
  * Styles for options, singleplayer, multiplayer, load/save, dialogs, keybinds.
  * Import after base.rcss.
  */
@@ -42,7 +42,7 @@
 
 .panel {
     background-color: #111111;
-    border-left: 3dp #ffcc00;
+    border-left: 3dp #8b0000;
     padding: 32dp;
     width: 100%;
     display: block;
@@ -111,13 +111,13 @@
 
 .menu-item:hover {
     background-color: #1a1a1a;
-    border-left: 3dp #ffcc00;
+    border-left: 3dp #8b0000;
     color: #ffffff;
 }
 
 .menu-item:active {
-    background-color: #ffcc00;
-    border-left: 3dp #ffcc00;
+    background-color: #8b0000;
+    border-left: 3dp #8b0000;
     color: #000000;
 }
 
@@ -135,17 +135,17 @@
 
 /* Primary menu item */
 .menu-item.primary {
-    color: #ffcc00;
+    color: #8b0000;
     font-size: 15dp;
 }
 
 .menu-item.primary:hover {
     background-color: #1a1a1a;
-    color: #ffd633;
+    color: #b30000;
 }
 
 .menu-item.primary:active {
-    background-color: #ffcc00;
+    background-color: #8b0000;
     color: #000000;
 }
 
@@ -214,7 +214,7 @@
 }
 
 .option-value {
-    color: #ffcc00;
+    color: #8b0000;
     font-size: 16dp;
     min-width: 120dp;
     text-align: right;
@@ -225,7 +225,7 @@
 }
 
 .option-row.clickable:hover .option-value {
-    color: #ffd633;
+    color: #b30000;
 }
 
 /* ============================================
@@ -242,7 +242,7 @@
     font-family: Space Grotesk;
     font-size: 18dp;
     font-weight: bold;
-    color: #ffcc00;
+    color: #8b0000;
     text-transform: uppercase;
     letter-spacing: 2dp;
     margin-top: 24dp;
@@ -325,7 +325,7 @@
     font-family: Space Grotesk;
     font-size: 14dp;
     font-weight: bold;
-    color: #ffcc00;
+    color: #8b0000;
     background-color: transparent;
     border: 2dp #333333;
     padding: 4dp 12dp;
@@ -336,12 +336,12 @@
 }
 
 .keybind-row:hover .keybind-key {
-    border-color: #ffcc00;
+    border-color: #8b0000;
 }
 
 .keybind-row.capturing .keybind-key {
-    background-color: #ffcc00;
-    border-color: #ffcc00;
+    background-color: #8b0000;
+    border-color: #8b0000;
     color: #000000;
     animation: blink 1s step-start infinite;
 }
@@ -362,7 +362,7 @@
 
 .save-slot:hover {
     background-color: #1a1a1a;
-    border-left: 3dp #ffcc00;
+    border-left: 3dp #8b0000;
     padding-left: 13dp;
 }
 
@@ -446,7 +446,7 @@
 }
 
 .scroll-area scrollbarvertical sliderbar:hover {
-    background-color: #ffcc00;
+    background-color: #8b0000;
 }
 
 /* ============================================

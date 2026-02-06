@@ -1,7 +1,7 @@
 /*
  * Tatoosh - Base Stylesheet
  *
- * Brutalist design system: monochrome + amber accent.
+ * Brutalist design system: monochrome + Quake red accent.
  * This file should be imported first in all RML documents.
  *
  * Palette:
@@ -13,9 +13,9 @@
  *   Text:          #ffffff
  *   Text-muted:    #666666
  *   Text-dim:      #444444
- *   Accent:        #ffcc00
- *   Accent-hover:  #ffd633
- *   Accent-dark:   #b38f00
+ *   Accent:        #8b0000  (Quake palette 248)
+ *   Accent-hover:  #b30000  (Quake palette 249)
+ *   Accent-dark:   #670000  (Quake palette 247)
  *   Danger:        #ff3333
  *   Success:       #33ff66
  */
@@ -110,12 +110,12 @@ em, i {
 }
 
 a {
-    color: #ffcc00;
+    color: #8b0000;
     text-decoration: none;
 }
 
 a:hover {
-    color: #ffd633;
+    color: #b30000;
     text-decoration: underline;
 }
 
@@ -244,10 +244,10 @@ a:hover {
 
 .text-primary { color: #ffffff; }
 .text-secondary { color: #666666; }
-.text-accent { color: #ffcc00; }
+.text-accent { color: #8b0000; }
 .text-muted { color: #666666; }
 .text-success { color: #33ff66; }
-.text-warning { color: #ffcc00; }
+.text-warning { color: #8b0000; }
 .text-danger { color: #ff3333; }
 .text-white { color: #ffffff; }
 
@@ -272,7 +272,7 @@ a:hover {
 
 .border { border: 1dp #333333; }
 .border-0 { border-width: 0; }
-.border-accent { border: 1dp #ffcc00; }
+.border-accent { border: 1dp #8b0000; }
 
 /* ============================================
    Animations

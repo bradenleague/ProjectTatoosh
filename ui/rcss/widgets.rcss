@@ -1,7 +1,7 @@
 /*
  * Tatoosh - Widget Stylesheet
  *
- * Brutalist design: monochrome + amber accent.
+ * Brutalist design: monochrome + Quake red accent.
  * Styles for form elements: buttons, sliders, checkboxes, inputs, etc.
  * Import after base.rcss.
  */
@@ -54,13 +54,13 @@ button:disabled:hover, .btn:disabled:hover {
 /* Button variants */
 .btn-primary {
     background-color: transparent;
-    border-color: #ffcc00;
-    color: #ffcc00;
+    border-color: #8b0000;
+    color: #8b0000;
 }
 
 .btn-primary:hover {
-    background-color: #ffcc00;
-    border-color: #ffcc00;
+    background-color: #8b0000;
+    border-color: #8b0000;
     color: #000000;
 }
 
@@ -109,7 +109,7 @@ input.text:hover, textarea:hover, .input:hover {
 }
 
 input.text:focus, textarea:focus, .input:focus {
-    border-bottom-color: #ffcc00;
+    border-bottom-color: #8b0000;
 }
 
 input.text:disabled, textarea:disabled, .input:disabled {
@@ -134,12 +134,12 @@ input.checkbox {
 }
 
 input.checkbox:hover {
-    border-color: #ffcc00;
+    border-color: #8b0000;
 }
 
 input.checkbox:checked {
-    background-color: #ffcc00;
-    border-color: #ffcc00;
+    background-color: #8b0000;
+    border-color: #8b0000;
 }
 
 /* ============================================
@@ -156,12 +156,12 @@ input.radio {
 }
 
 input.radio:hover {
-    border-color: #ffcc00;
+    border-color: #8b0000;
 }
 
 input.radio:checked {
-    background-color: #ffcc00;
-    border-color: #ffcc00;
+    background-color: #8b0000;
+    border-color: #8b0000;
 }
 
 /* ============================================
@@ -187,11 +187,11 @@ input.range sliderbar {
 }
 
 input.range sliderbar:hover {
-    background-color: #ffcc00;
+    background-color: #8b0000;
 }
 
 input.range sliderbar:active {
-    background-color: #ffcc00;
+    background-color: #8b0000;
 }
 
 input.range sliderarrowdec,

@@ -1,7 +1,7 @@
 /*
  * Tatoosh - Main Menu Stylesheet
  *
- * Brutalist design: monochrome + amber accent.
+ * Brutalist design: monochrome + Quake red accent.
  * Used by main_menu.rml and pause_menu.rml.
  */
 
@@ -32,7 +32,7 @@
     font-family: Space Grotesk;
     font-size: 64dp;
     font-weight: bold;
-    color: #ffcc00;
+    color: #8b0000;
     letter-spacing: 6dp;
     text-transform: uppercase;
     margin-top: 0;
@@ -101,8 +101,8 @@
     padding-bottom: 14dp;
     padding-left: 0;
     padding-right: 0;
-    background-color: #ffcc00;
-    border: 2dp #ffcc00;
+    background-color: #8b0000;
+    border: 2dp #8b0000;
     color: #000000;
     font-family: Space Grotesk;
     font-size: 14dp;
@@ -115,13 +115,13 @@
 }
 
 .btn-primary:hover {
-    background-color: #ffd633;
-    border-color: #ffd633;
+    background-color: #b30000;
+    border-color: #b30000;
 }
 
 .btn-primary:active {
-    background-color: #b38f00;
-    border-color: #b38f00;
+    background-color: #670000;
+    border-color: #670000;
 }
 
 /* Quit button — smaller, muted, fills red on hover */

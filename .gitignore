@@ -67,8 +67,9 @@ config.cfg.local
 # Engine-saved config (vkQuake auto-saves to this file on exit)
 vkQuake.cfg
 
-# Claude Code local config
-.claude/
+# Claude Code local config (track skills for team use)
+.claude/*
+!.claude/skills/
 
 # Debug files
 *.dSYM/

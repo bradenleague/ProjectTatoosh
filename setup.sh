@@ -68,22 +68,28 @@ fi
 
 printf "\n${BOLD}Initializing submodules...${RESET}\n"
 
-if [ ! -f engine/Quake/quakedef.h ]; then
+if [ ! -f engine/Quake/quakedef.h ] || [ ! -f external/rmlui/CMakeLists.txt ]; then
     git submodule update --init --recursive
     ok "submodules initialized"
 else
     ok "submodules already present"
 fi
 
-# ── 3. Download LibreQuake PAK files ──────────────────────────────
+# ── 3. Ensure LibreQuake PAK files ──────────────────────────────
 
 printf "\n${BOLD}Checking LibreQuake assets...${RESET}\n"
 
-PAK_DIR="external/librequake/lq1"
+PAK_DIR="external/assets/id1"
+LEGACY_PAK_DIR="external/librequake/lq1"
 PAK_URL="https://github.com/lavenderdotpet/LibreQuake/releases/download/v0.09-beta/full.zip"
 
 if [ -f "$PAK_DIR/pak0.pak" ]; then
     ok "PAK files already present"
+elif [ -f "$LEGACY_PAK_DIR/pak0.pak" ]; then
+    warn "Found legacy PAK path at $LEGACY_PAK_DIR — migrating to $PAK_DIR"
+    mkdir -p "$PAK_DIR"
+    cp "$LEGACY_PAK_DIR"/pak*.pak "$PAK_DIR"/
+    ok "PAK files migrated from legacy path"
 else
     warn "PAK files missing — downloading LibreQuake..."
     tmpdir=$(mktemp -d)

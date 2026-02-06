@@ -1,6 +1,6 @@
 #!/bin/bash
-# Compile LibreQuake maps using ericw-tools
-# Usage: ./scripts/compile-maps.sh [options]
+# Compile LibreQuake maps using ericw-tools.
+# Usage: LIBREQUAKE_SRC=/path/to/LibreQuake ./scripts/compile-maps.sh [options]
 #
 # Options (passed to compile_maps.py):
 #   -m          Compile all maps
@@ -10,16 +10,28 @@
 #   -h          Show help
 #
 # Examples:
-#   ./scripts/compile-maps.sh -m              # Compile all maps
-#   ./scripts/compile-maps.sh -d src/e1       # Compile episode 1
-#   ./scripts/compile-maps.sh -s lq_e1m1      # Compile single map
+#   LIBREQUAKE_SRC=~/src/LibreQuake ./scripts/compile-maps.sh -m
+#   LIBREQUAKE_SRC=~/src/LibreQuake ./scripts/compile-maps.sh -d src/e1
+#   LIBREQUAKE_SRC=~/src/LibreQuake ./scripts/compile-maps.sh -s lq_e1m1
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 TOOLS_DIR="$PROJECT_ROOT/tools"
-MAPS_DIR="$PROJECT_ROOT/external/librequake/lq1/maps"
+
+if [[ -z "${LIBREQUAKE_SRC:-}" ]]; then
+    echo "Error: map compilation is optional and requires an external LibreQuake source checkout."
+    echo "Set LIBREQUAKE_SRC to your LibreQuake repo path."
+    echo "Example: LIBREQUAKE_SRC=~/src/LibreQuake ./scripts/compile-maps.sh -m"
+    exit 1
+fi
+
+MAPS_DIR="$LIBREQUAKE_SRC/lq1/maps"
+if [[ ! -d "$MAPS_DIR" ]]; then
+    echo "Error: expected maps directory not found: $MAPS_DIR"
+    exit 1
+fi
 
 # Check for required tools
 if [[ ! -x "$TOOLS_DIR/qbsp" ]]; then
@@ -35,8 +47,13 @@ export DYLD_LIBRARY_PATH="$TOOLS_DIR:$DYLD_LIBRARY_PATH"
 
 cd "$MAPS_DIR"
 
+if [[ ! -f compile_maps.py ]]; then
+    echo "Error: compile_maps.py not found in $MAPS_DIR"
+    exit 1
+fi
+
 if [[ $# -eq 0 ]]; then
-    echo "Usage: $0 [options]"
+    echo "Usage: LIBREQUAKE_SRC=/path/to/LibreQuake $0 [options]"
     echo "Run '$0 -h' for help"
     exit 1
 fi

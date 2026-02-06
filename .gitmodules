@@ -2,9 +2,6 @@
 	path = external/rmlui
 	url = https://github.com/bradenleague/RmlUi.git
 	branch = tatoosh
-[submodule "external/librequake"]
-	path = external/librequake
-	url = https://github.com/lavenderdotpet/LibreQuake.git
 [submodule "engine"]
 	path = engine
 	url = https://github.com/bradenleague/vkQuake.git

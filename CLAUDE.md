@@ -7,9 +7,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Project Tatoosh is built on:
 - **vkQuake** (Vulkan-based Quake engine) - `engine/` submodule (branch: `tatoosh`)
 - **RmlUI** (HTML/CSS UI framework) - `external/rmlui/` submodule (branch: `tatoosh`)
-- **LibreQuake** (BSD-licensed game assets) - `external/librequake/` submodule
+- **LibreQuake** (BSD-licensed game assets) - PAK files downloaded to `external/assets/id1/`
 
-All three submodules are custom forks. Engine and RmlUI are on `tatoosh` branches.
+Engine and RmlUI are custom forks on `tatoosh` branches.
 
 ## Build Commands
 
@@ -27,14 +27,15 @@ brew install cmake meson ninja sdl2 molten-vk vulkan-headers glslang freetype
 
 ### Build & Run
 ```bash
-make setup       # First-time: check deps, init submodules, download PAK files
-make             # Build RmlUI libs (CMake) + engine (Meson)
+make setup       # First-time: check deps, init engine+rmlui submodules, download PAK files to external/assets/id1
+make             # Build everything
 make run         # Build, assemble game/, and launch
-make engine      # Rebuild just the engine
-make libs        # Rebuild just RmlUI static library
+make engine      # Rebuild engine (+ embedded RmlUI deps)
+make libs        # Compatibility alias for engine build
 make assemble    # Set up game/ runtime directory (symlinks + assets)
 make meson-setup # Wipe and re-run meson setup for engine
-make clean       # Clean all build artifacts (including game/)
+make clean       # Clean build artifacts only (preserves game/)
+make distclean   # Clean build artifacts + game runtime data
 ```
 
 ### Manual Run
@@ -46,21 +47,21 @@ make clean       # Clean all build artifacts (including game/)
 
 ```bash
 ./scripts/compile-qc.sh              # QuakeC → progs.dat (needs tools/fteqcc)
-./scripts/compile-maps.sh -m         # All maps (needs tools/qbsp, vis, light)
-./scripts/compile-maps.sh -d src/e1  # Episode 1 only
-./scripts/compile-maps.sh -c         # Clean map build artifacts
+LIBREQUAKE_SRC=~/src/LibreQuake ./scripts/compile-maps.sh -m
+LIBREQUAKE_SRC=~/src/LibreQuake ./scripts/compile-maps.sh -d src/e1
+LIBREQUAKE_SRC=~/src/LibreQuake ./scripts/compile-maps.sh -c
 ```
 
 On Arch Linux: `yay -S ericw-tools` for map tools, or download binaries into `tools/`.
 
 ## Architecture
 
-### Two Build Systems
+### Build Topology
 
-- **CMake** (`CMakeLists.txt`): Builds RmlUI from submodule as static libraries (`librmlui.a`, `librmlui_debugger.a`)
-- **Meson** (`engine/meson.build`): Builds vkQuake engine, compiles `rmlui/` integration sources, links `librmlui.a`
+- **Meson** (`engine/meson.build`): Primary build orchestration for vkQuake and `rmlui/` integration sources.
+- **CMake via Meson subproject** (`engine/subprojects/rmlui`): Meson bridges into RmlUI's CMake project and links `rmlui_core` + `rmlui_debugger`.
 
-The Makefile orchestrates both: `make` runs CMake first, then Meson.
+The Makefile is a thin wrapper around Meson build/assemble/run commands.
 
 ### RmlUI Integration Layer (`rmlui/`)
 
@@ -99,8 +100,10 @@ rmlui/
 ### Runtime Directory (`game/`)
 
 Assembled by `make assemble`, gitignored:
-- `game/id1/` → symlink to `external/librequake/lq1/` (base assets, read-only)
-- `game/tatoosh/` → copies of `quake.rc`, `config.cfg`, `progs.dat` from `tatoosh/`
+- `game/id1/` → symlink to `external/assets/id1/` (base assets, read-only)
+- `game/ui/` → symlink to `ui/` (RmlUI documents and fonts)
+- `game/tatoosh/quake.rc` and `game/tatoosh/config.cfg` → symlinks to `tatoosh/` source files
+- `game/tatoosh/progs.dat` → copied from `tatoosh/progs.dat` when present
 - Engine writes `vkQuake.cfg` into `game/tatoosh/`, never into the source tree
 
 ### Mod Sources (`tatoosh/`)

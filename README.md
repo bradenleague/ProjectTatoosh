@@ -27,7 +27,7 @@ brew install cmake meson ninja sdl2 molten-vk vulkan-headers glslang freetype
 ```bash
 git clone https://github.com/bradenleague/ProjectTatoosh.git
 cd ProjectTatoosh
-make setup   # checks deps, inits submodules, downloads PAK files
+make setup   # checks deps, inits engine+rmlui submodules, downloads PAK files to external/assets/id1
 make run
 ```
 
@@ -35,14 +35,15 @@ Other targets:
 
 | Command | Description |
 |---------|-------------|
-| `make` | Build everything (RmlUI libs + engine) |
+| `make` | Build everything |
 | `make run` | Build, assemble game/, and launch |
-| `make libs` | Build only RmlUI + UI integration library |
-| `make engine` | Build only the engine |
+| `make libs` | Compatibility alias for engine build |
+| `make engine` | Build the engine (+ embedded RmlUI deps) |
 | `make assemble` | Set up game/ runtime directory (symlinks + assets) |
-| `make setup` | First-time setup (deps, submodules, PAK files) |
+| `make setup` | First-time setup (deps, engine+rmlui submodules, PAK files in `external/assets/id1`) |
 | `make meson-setup` | Re-run meson setup for the engine |
-| `make clean` | Remove all build artifacts (including game/) |
+| `make clean` | Remove build artifacts only (preserves `game/`) |
+| `make distclean` | Remove build artifacts and `game/` runtime data |
 
 <p align="center">
   <img width="600"
@@ -55,7 +56,7 @@ Maps and QuakeC can be compiled from source if you have the tooling set up:
 
 ```bash
 ./scripts/compile-qc.sh           # Compile QuakeC -> progs.dat
-./scripts/compile-maps.sh -m      # Compile all maps -> .bsp files
+LIBREQUAKE_SRC=~/src/LibreQuake ./scripts/compile-maps.sh -m   # Optional map compile
 ```
 
 These require tools in `tools/` (git-ignored). Download and extract:
@@ -75,6 +76,8 @@ tools/
 ```
 
 On Linux, ericw-tools links against system libraries instead. Install with `yay -S ericw-tools` (AUR) or build from source.
+
+Map compilation is intentionally decoupled from repo setup and requires an external LibreQuake source checkout (`LIBREQUAKE_SRC`).
 
 > **Note:** PAK files are currently downloaded from a LibreQuake release rather than
 > built from source. LibreQuake's `build.py` can generate them with `qpakman`, but

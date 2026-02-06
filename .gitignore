@@ -1,5 +1,6 @@
 # Runtime game directory (assembled from LibreQuake + tatoosh sources)
 game/
+external/librequake/
 
 # Build directories
 build/

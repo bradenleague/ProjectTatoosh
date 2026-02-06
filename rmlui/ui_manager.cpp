@@ -16,6 +16,7 @@
 #include <RmlUi/Debugger.h>
 
 #include <SDL.h>
+#include <algorithm>
 #include <cstdio>
 #include <unordered_map>
 #include <string>
@@ -86,6 +87,22 @@ bool HasVisibleMenuDocument()
         }
     }
     return false;
+}
+
+void AddUniquePath(std::vector<std::string>& paths, const std::string& path)
+{
+    if (path.empty()) {
+        return;
+    }
+
+    std::string normalized = path;
+    if (normalized.back() != '/' && normalized.back() != '\\') {
+        normalized.push_back('/');
+    }
+
+    if (std::find(paths.begin(), paths.end(), normalized) == paths.end()) {
+        paths.emplace_back(std::move(normalized));
+    }
 }
 
 // Convert SDL key to RmlUI key
@@ -293,35 +310,32 @@ static void UI_LoadAssets()
 {
     // Load fonts from ui/fonts directory
     // RmlUI's LoadFontFace auto-detects family, style, weight from the font file
-    // Try multiple paths to find the UI assets
+    // Prefer deterministic staged path under com_basedir, keep narrow fallbacks.
     std::vector<std::string> ui_paths;
     if (!g_engine_base_path.empty()) {
         std::string base = g_engine_base_path;
         if (!base.empty() && (base.back() == '/' || base.back() == '\\')) {
             base.pop_back();
         }
-        // base_path is typically com_basedir (e.g., external/librequake)
-        ui_paths.emplace_back(base + "/ui/");
-        ui_paths.emplace_back(base + "/../ui/");
-        ui_paths.emplace_back(base + "/../../ui/");
+        // base_path is com_basedir (normally "game"), so stage assets at game/ui.
+        AddUniquePath(ui_paths, base + "/ui");
     }
 
-    // Relative to executable location (packaging-friendly)
+    // Repository root / packaged CWD fallback.
+    AddUniquePath(ui_paths, "ui");
+
+    // Relative to executable location (packaging-friendly).
     if (char* sdl_base = SDL_GetBasePath()) {
         std::string exe_base = sdl_base;
         SDL_free(sdl_base);
         if (!exe_base.empty() && (exe_base.back() == '/' || exe_base.back() == '\\')) {
             exe_base.pop_back();
         }
-        ui_paths.emplace_back(exe_base + "/ui/");
-        ui_paths.emplace_back(exe_base + "/../ui/");
-        ui_paths.emplace_back(exe_base + "/../../ui/");
+        AddUniquePath(ui_paths, exe_base + "/ui");
     }
 
-    // Relative to common run locations
-    ui_paths.emplace_back("ui/");        // Repo root or packaged CWD
-    ui_paths.emplace_back("../ui/");     // engine/build or build_meson_test
-    ui_paths.emplace_back("../../ui/");  // engine/build subdir
+    // Legacy dev fallback (running from engine/build without game/ui staged).
+    AddUniquePath(ui_paths, "../ui");
 
     std::string ui_path;
     bool font_loaded = false;

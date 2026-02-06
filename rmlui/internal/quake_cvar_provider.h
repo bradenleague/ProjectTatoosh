@@ -7,7 +7,7 @@
 #ifndef TATOOSH_QUAKE_CVAR_PROVIDER_H
 #define TATOOSH_QUAKE_CVAR_PROVIDER_H
 
-#include "../domain/ports/cvar_provider.h"
+#include "../types/cvar_provider.h"
 
 namespace Tatoosh {
 

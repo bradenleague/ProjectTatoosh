@@ -6,12 +6,11 @@
  */
 
 #include "ui_manager.h"
-#include "../infrastructure/render_interface_vk.h"
-#include "../infrastructure/system_interface.h"
-#include "../infrastructure/game_data_model.h"
-#include "../infrastructure/cvar_binding.h"
-#include "../infrastructure/menu_event_handler.h"
-#include "../application/menu_stack.h"
+#include "internal/render_interface_vk.h"
+#include "internal/system_interface.h"
+#include "internal/game_data_model.h"
+#include "internal/cvar_binding.h"
+#include "internal/menu_event_handler.h"
 
 #include <RmlUi/Core.h>
 #include <RmlUi/Debugger.h>
@@ -36,6 +35,9 @@ extern "C" {
 }
 
 namespace {
+
+// Debounce window (seconds) to prevent immediate close when a menu was just opened
+constexpr double MENU_DEBOUNCE_SECONDS = 0.1;
 
 // Global state
 std::unique_ptr<Tatoosh::RenderInterface_VK> g_render_interface;
@@ -425,7 +427,7 @@ static void UI_ProcessPendingEscape(void)
     if (!g_initialized || !g_context) return;
 
     // Prevent immediate close if menu was just opened (same key event causing open+close)
-    if (realtime - g_menu_open_time < Tatoosh::MENU_DEBOUNCE_SECONDS) {
+    if (realtime - g_menu_open_time < MENU_DEBOUNCE_SECONDS) {
         return;
     }
 

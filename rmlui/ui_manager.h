@@ -6,7 +6,7 @@
 #ifndef TATOOSH_UI_MANAGER_H
 #define TATOOSH_UI_MANAGER_H
 
-#include "../domain/input_mode.h"
+#include "types/input_mode.h"
 
 #ifdef __cplusplus
 extern "C" {

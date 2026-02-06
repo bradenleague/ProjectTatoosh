@@ -7,7 +7,7 @@
 #ifndef TATOOSH_QUAKE_COMMAND_EXECUTOR_H
 #define TATOOSH_QUAKE_COMMAND_EXECUTOR_H
 
-#include "../domain/ports/command_executor.h"
+#include "../types/command_executor.h"
 
 namespace Tatoosh {
 

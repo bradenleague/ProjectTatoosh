@@ -16,7 +16,7 @@
 #define TATOOSH_GAME_DATA_MODEL_H
 
 #include <RmlUi/Core.h>
-#include "../domain/game_state.h"
+#include "../types/game_state.h"
 
 namespace Tatoosh {
 

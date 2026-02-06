@@ -10,11 +10,15 @@
 
 #include <cctype>
 
+// Forward-declare UI_* and engine functions with extern "C" linkage instead of
+// including ui_manager.h.  menu_event_handler is compiled as part of the same
+// translation unit set that provides ui_manager.cpp, so these symbols resolve at
+// link time.  Including the header directly would create a circular dependency:
+//   ui_manager.cpp -> menu_event_handler.h -> ... -> ui_manager.h
+// The extern "C" block keeps the two halves decoupled at compile time.
 extern "C" {
-    // Quake engine functions
     void Con_Printf(const char* fmt, ...);
 
-    // UI functions (from ui_manager.h)
     void UI_PushMenu(const char* path);
     void UI_PopMenu(void);
     void UI_SetInputMode(int mode);
@@ -22,10 +26,8 @@ extern "C" {
     void UI_HandleEscape(void);
     void UI_CloseAllMenusImmediate(void);
 
-    // Input mode for returning to game
     void IN_Activate(void);
 
-    // Key dest for menu state
     extern int key_dest;
     #define key_game 0
     #define key_console 1

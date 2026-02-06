@@ -21,8 +21,8 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include "../domain/ports/cvar_provider.h"
-#include "../domain/cvar_schema.h"
+#include "../types/cvar_provider.h"
+#include "../types/cvar_schema.h"
 
 namespace Tatoosh {
 

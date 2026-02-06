@@ -64,39 +64,30 @@ The Makefile orchestrates both: `make` runs CMake first, then Meson.
 
 ### RmlUI Integration Layer (`rmlui/`)
 
-Layered architecture with dependency inversion:
-
 ```
-interface/          C API facade (extern "C") — what vkQuake calls
-  └── ui_manager    Init, frame loop, input dispatch, document management
-
-application/        Coordination logic
-  ├── document_manager  Load/unload RML documents
-  └── menu_stack        Stack-based menu navigation (push/pop)
-
-domain/             Pure types, no dependencies
-  ├── input_mode.h      UI_INPUT_INACTIVE / MENU_ACTIVE / OVERLAY
-  ├── game_state.h      Synced game state struct
-  ├── cvar_schema.h     Console variable metadata
-  └── ports/            Interfaces for dependency inversion
-      ├── cvar_provider.h
-      ├── command_executor.h
-      └── logger.h
-
-infrastructure/     RmlUI + Vulkan adapters
-  ├── render_interface_vk   Custom Vulkan renderer (pipelines, buffers, textures)
-  ├── system_interface      Time/logging/clipboard bridge to engine
-  ├── game_data_model       Sync Quake game state → RmlUI data bindings
-  ├── cvar_binding          Two-way sync between cvars and UI elements
-  ├── menu_event_handler    Handle menu clicks, parse action strings
-  └── quake_*_provider/executor/logger  Port implementations
+rmlui/
+  ui_manager.h/.cpp     Public C API (extern "C") — what vkQuake calls
+  types/                Header-only shared types
+    ├── input_mode.h        UI_INPUT_INACTIVE / MENU_ACTIVE / OVERLAY
+    ├── game_state.h        Synced game state struct
+    ├── cvar_schema.h       Console variable metadata
+    ├── cvar_provider.h     ICvarProvider interface
+    └── command_executor.h  ICommandExecutor interface
+  internal/             C++ implementation (RmlUI + Vulkan adapters)
+    ├── render_interface_vk   Custom Vulkan renderer (pipelines, buffers, textures)
+    ├── system_interface      Time/logging/clipboard bridge to engine
+    ├── game_data_model       Sync Quake game state → RmlUI data bindings
+    ├── cvar_binding          Two-way sync between cvars and UI elements
+    ├── menu_event_handler    Handle menu clicks, parse action strings
+    ├── quake_cvar_provider   ICvarProvider implementation
+    └── quake_command_executor ICommandExecutor implementation
 ```
 
 ### C/C++ Boundary
 
 - RmlUI layer is C++ (`namespace Tatoosh`, C++17)
 - vkQuake engine is pure C (gnu11)
-- `interface/ui_manager.h` provides `extern "C"` API
+- `rmlui/ui_manager.h` provides `extern "C"` API
 - All engine-side UI calls are gated with `#ifdef USE_RMLUI`
 
 ### Input Modes (`ui_input_mode_t`)

@@ -27,7 +27,7 @@
 #include <functional>
 #include <memory>
 #include <vector>
-#include "../domain/ports/command_executor.h"
+#include "../types/command_executor.h"
 
 namespace Tatoosh {
 

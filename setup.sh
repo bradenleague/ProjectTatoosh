@@ -110,3 +110,5 @@ fi
 
 printf "\n${GREEN}${BOLD}Ready!${RESET} Build and run with:\n"
 printf "  ${BOLD}make run${RESET}\n\n"
+printf "To compile QuakeC or maps, install optional tools with:\n"
+printf "  ${BOLD}./scripts/setup-tools.sh${RESET}\n\n"

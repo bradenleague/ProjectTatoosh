@@ -43,8 +43,8 @@
                             <span class="keybind-key">SPACE</span>
                         </div>
 
-                        <div class="keybind-row" onclick="bind_key('+speed')">
-                            <span class="keybind-action">Run/Walk</span>
+                        <div class="keybind-row" onclick="bind_key('+sprint')">
+                            <span class="keybind-action">Sprint</span>
                             <span class="keybind-key">SHIFT</span>
                         </div>
 

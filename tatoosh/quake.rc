@@ -13,6 +13,7 @@ exec autoexec.cfg
 // Sprint
 alias +sprint "impulse 20"
 alias -sprint "impulse 21"
+bind shift "+sprint"
 
 // Process command-line arguments
 stuffcmds

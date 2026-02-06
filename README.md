@@ -59,14 +59,23 @@ Maps and QuakeC can be compiled from source if you have the tooling set up:
 LIBREQUAKE_SRC=~/src/LibreQuake ./scripts/compile-maps.sh -m   # Optional map compile
 ```
 
-These require tools in `tools/` (git-ignored). Download and extract:
+These require tools in `tools/` (git-ignored). Run the setup script to install them:
+
+```bash
+./scripts/setup-tools.sh
+```
+
+Or install manually:
 
 - **[ericw-tools](https://github.com/ericwa/ericw-tools/releases)** — `qbsp`, `vis`, `light`, and bundled `*.dylib` files
-- **[FTEQCC](https://www.fteqcc.com/)** — `fteqcc` binary
+- **FTEQCC** — QuakeC compiler
+  - Linux: [fteqcc64](https://sourceforge.net/projects/fteqw/files/FTEQCC/fteqcc64/download) (place as `tools/fteqcc64`)
+  - macOS: build from [fteqw-applesilicon](https://github.com/BryanHaley/fteqw-applesilicon) (place as `tools/fteqcc`)
 
 ```
 tools/
-├── fteqcc              # QuakeC compiler
+├── fteqcc              # QuakeC compiler (macOS)
+├── fteqcc64            # QuakeC compiler (Linux)
 ├── qbsp                # BSP compiler (ericw-tools)
 ├── vis                 # Visibility compiler (ericw-tools)
 ├── light               # Light compiler (ericw-tools)

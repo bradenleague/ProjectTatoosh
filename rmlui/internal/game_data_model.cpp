@@ -5,6 +5,7 @@
  */
 
 #include "game_data_model.h"
+#include "notification_model.h"
 
 // Quake stat indices (from quakedef.h)
 #define STAT_HEALTH         0
@@ -138,7 +139,14 @@ bool GameDataModel::Initialize(Rml::Context* context)
     constructor.Bind("face_index", &g_game_state.face_index);
     constructor.Bind("face_pain", &g_game_state.face_pain);
 
+    // Register notification bindings on the same "game" model
+    NotificationModel::RegisterBindings(constructor);
+
     s_model_handle = constructor.GetModelHandle();
+
+    // Share the model handle with NotificationModel for selective dirtying
+    NotificationModel::SetModelHandle(s_model_handle);
+
     s_initialized = true;
 
     Con_Printf("GameDataModel: Initialized successfully\n");
@@ -148,6 +156,8 @@ bool GameDataModel::Initialize(Rml::Context* context)
 void GameDataModel::Shutdown()
 {
     if (!s_initialized) return;
+
+    NotificationModel::Shutdown();
 
     // RmlUI handles cleanup when context is destroyed
     s_model_handle = Rml::DataModelHandle();

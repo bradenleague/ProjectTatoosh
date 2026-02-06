@@ -936,3 +936,39 @@
     letter-spacing: 2dp;
     margin-bottom: 4dp;
 }
+
+/* ============================================
+   Centerprint - CENTER SCREEN MESSAGES
+   ============================================ */
+
+.centerprint-area {
+    max-width: 600dp;
+    text-align: center;
+}
+
+.centerprint-text {
+    font-size: 22dp;
+    font-weight: bold;
+    color: #ffffff;
+    text-align: center;
+    letter-spacing: 1dp;
+    font-effect: outline(2dp #000000);
+}
+
+/* ============================================
+   Notify Messages - TOP-LEFT CONSOLE LINES
+   ============================================ */
+
+.notify-area {
+    position: absolute;
+    top: 100dp;
+    left: 24dp;
+    width: 500dp;
+}
+
+.notify-line {
+    font-size: 14dp;
+    color: #ffffff;
+    padding: 2dp 0;
+    font-effect: outline(1dp #000000);
+}

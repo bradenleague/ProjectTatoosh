@@ -49,5 +49,18 @@
         <div>{{ secrets }}/{{ total_secrets }} SECRETS</div>
     </div>
 
+    <!-- Centerprint (center screen, when active) -->
+    <div class="centerprint-area hud-center" data-if="centerprint_visible">
+        <div class="centerprint-text">{{ centerprint }}</div>
+    </div>
+
+    <!-- Notify messages (top-left, below powerups/stats) -->
+    <div class="notify-area">
+        <div class="notify-line" data-if="notify_0_visible">{{ notify_0 }}</div>
+        <div class="notify-line" data-if="notify_1_visible">{{ notify_1 }}</div>
+        <div class="notify-line" data-if="notify_2_visible">{{ notify_2 }}</div>
+        <div class="notify-line" data-if="notify_3_visible">{{ notify_3 }}</div>
+    </div>
+
 </body>
 </rml>

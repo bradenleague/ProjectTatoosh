@@ -83,6 +83,10 @@ void UI_SyncGameState(const int* stats, int items,
                       const char* level_name, const char* map_name,
                       double game_time);
 
+/* Notification system */
+void UI_NotifyCenterPrint(const char* text);
+void UI_NotifyPrint(const char* text);
+
 /* Key capture support (for rebinding UI) */
 int UI_IsCapturingKey(void);
 void UI_OnKeyCaptured(int key, const char* key_name);

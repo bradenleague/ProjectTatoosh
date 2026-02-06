@@ -11,6 +11,7 @@
 #include "internal/game_data_model.h"
 #include "internal/cvar_binding.h"
 #include "internal/menu_event_handler.h"
+#include "internal/notification_model.h"
 
 #include <RmlUi/Core.h>
 #include <RmlUi/Debugger.h>
@@ -580,6 +581,9 @@ void UI_Update(double dt)
 
     // Update game data model to sync with Quake state
     Tatoosh::GameDataModel::Update();
+
+    // Update notification expiry state
+    Tatoosh::NotificationModel::Update(realtime);
 
     g_context->Update();
 
@@ -1171,6 +1175,20 @@ void UI_SyncGameState(const int* stats, int items,
 
     GameDataModel_SyncFromQuake(stats, items, intermission, gametype,
                                 maxclients, level_name, map_name, game_time);
+}
+
+// ── Notification system ────────────────────────────────────────────
+
+void UI_NotifyCenterPrint(const char* text)
+{
+    if (!g_initialized || !text) return;
+    Tatoosh::NotificationModel::CenterPrint(text, realtime);
+}
+
+void UI_NotifyPrint(const char* text)
+{
+    if (!g_initialized || !text) return;
+    Tatoosh::NotificationModel::NotifyPrint(text, realtime);
 }
 
 // ── Key capture ────────────────────────────────────────────────────

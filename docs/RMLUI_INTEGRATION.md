@@ -6,10 +6,11 @@ This document describes how RmlUI is integrated with vkQuake in Tatoosh, includi
 
 RmlUI provides HTML/CSS-based UI rendering within vkQuake's Vulkan pipeline. The integration consists of:
 
-- **Render Interface** (`rmlui/render_interface_vk.cpp`) - Custom Vulkan renderer using vkQuake's context
-- **System Interface** (`rmlui/system_interface.cpp`) - Time and logging integration
+- **Render Interface** (`rmlui/internal/render_interface_vk.cpp`) - Custom Vulkan renderer using vkQuake's context
+- **System Interface** (`rmlui/internal/system_interface.cpp`) - Time and logging integration
 - **UI Manager** (`rmlui/ui_manager.cpp`) - Document management, input handling, state control
-- **C Bridge** (`engine/Quake/rmlui_bridge.cpp`) - C-compatible API for vkQuake integration
+
+The public C API is defined in `rmlui/ui_manager.h` with a `UI_` prefix. All engine-side calls are gated with `#ifdef USE_RMLUI`.
 
 ## Input Handling System
 
@@ -26,16 +27,16 @@ RmlUI uses three input modes that integrate with vkQuake's `key_dest` system:
 
 | Mode | Description | Input Behavior |
 |------|-------------|----------------|
-| `RMLUI_INACTIVE` | Default state | RmlUI doesn't handle input, game works normally |
-| `RMLUI_MENU_ACTIVE` | Menu is open | RmlUI captures all input except Escape |
-| `RMLUI_OVERLAY` | HUD elements | RmlUI visible but passes input through to game |
+| `UI_INPUT_INACTIVE` | Default state | RmlUI doesn't handle input, game works normally |
+| `UI_INPUT_MENU_ACTIVE` | Menu is open | RmlUI captures all input except Escape |
+| `UI_INPUT_OVERLAY` | HUD elements | RmlUI visible but passes input through to game |
 
 ### Menu Stack
 
 When menus are opened, they're pushed onto a stack. Pressing Escape:
 1. Pops the current menu from the stack
 2. Hides that menu document
-3. If the stack is empty, returns to `RMLUI_INACTIVE` mode
+3. If the stack is empty, returns to `UI_INPUT_INACTIVE` mode
 4. If menus remain, shows the previous menu
 
 This allows nested menus (e.g., Main Menu → Options → Video Settings) where Escape navigates back through the hierarchy.
@@ -53,13 +54,6 @@ This allows nested menus (e.g., Main Menu → Options → Video Settings) where 
 | `ui_hide` | Alias for `ui_closemenu` |
 | `ui_debugger` | Toggle RmlUI visual debugger |
 | `ui_debuger` | Alias for `ui_debugger` |
-
-### Menu Commands
-
-| Command | Description |
-|---------|-------------|
-| `ui_menu [path]` | Open an RmlUI menu (default: `ui/rml/menus/main_menu.rml`) |
-| `ui_closemenu` | Close all RmlUI menus and return to game |
 
 ### Configuration
 
@@ -79,82 +73,152 @@ in_sdl2.c: IN_SendKeyEvents()
     │
     ├──[ESCAPE]──► keys.c: Key_EventWithKeycode()
     │                   │
-    │                   ├──[RmlUI_WantsMenuInput()?]
+    │                   ├──[UI_WantsMenuInput()?]
     │                   │       │
-    │                   │       YES ──► RmlUI_HandleEscape()
+    │                   │       YES ──► UI_HandleEscape()
     │                   │       │           │
     │                   │       │           └──[menus left?]
     │                   │       │                 NO ──► key_dest=key_game, IN_Activate()
     │                   │       │
     │                   │       NO ──► [ui_use_rmlui_menus?]
     │                   │                   │
-    │                   │                   YES ──► RmlUI_PushMenu(), key_dest=key_menu
+    │                   │                   YES ──► UI_PushMenu(), key_dest=key_menu
     │                   │                   │
     │                   │                   NO ──► M_ToggleMenu_f() (Quake menu)
     │
     └──[Other keys]
             │
-            └──[RmlUI_WantsMenuInput()?]
+            └──[UI_WantsMenuInput()?]
                     │
-                    YES ──► RmlUI_KeyEvent() [consume]
+                    YES ──► UI_KeyEvent() [consume]
                     │
                     NO ──► Quake key handling
 ```
 
 ## API Reference
 
-### C API (rmlui_bridge.h)
+### C API (rmlui/ui_manager.h)
 
 ```c
-/* Input mode enum */
+/* Input mode enum (from types/input_mode.h) */
 typedef enum {
-    RMLUI_INACTIVE,      /* Not handling input */
-    RMLUI_MENU_ACTIVE,   /* Menu captures all input */
-    RMLUI_OVERLAY        /* HUD mode, pass-through */
-} rmlui_input_mode_t;
+    UI_INPUT_INACTIVE,      /* Not handling input */
+    UI_INPUT_MENU_ACTIVE,   /* Menu captures all input */
+    UI_INPUT_OVERLAY        /* HUD mode, pass-through */
+} ui_input_mode_t;
+
+/* Lifecycle */
+int UI_Init(int width, int height, const char *base_path);
+void UI_Shutdown(void);
+void UI_ProcessPending(void);
+void UI_Update(double dt);
+void UI_Render(void);
+void UI_Resize(int width, int height);
 
 /* Input mode control */
-void RmlUI_SetInputMode(rmlui_input_mode_t mode);
-rmlui_input_mode_t RmlUI_GetInputMode(void);
-int RmlUI_WantsMenuInput(void);   /* Returns 1 if MENU_ACTIVE */
-void RmlUI_HandleEscape(void);    /* Close current menu or deactivate */
-void RmlUI_PushMenu(const char* path);  /* Open menu, set MENU_ACTIVE */
-void RmlUI_PopMenu(void);         /* Pop current menu from stack */
+void UI_SetInputMode(ui_input_mode_t mode);
+ui_input_mode_t UI_GetInputMode(void);
+int UI_WantsMenuInput(void);      /* Returns 1 if MENU_ACTIVE */
+void UI_HandleEscape(void);       /* Close current menu or deactivate */
+void UI_PushMenu(const char* path);   /* Open menu, set MENU_ACTIVE */
+void UI_PopMenu(void);            /* Pop current menu from stack */
+void UI_CloseAllMenus(void);      /* Close all menus (deferred) */
 
 /* Visibility (independent of input mode) */
-void RmlUI_SetVisible(int visible);
-int RmlUI_IsVisible(void);
-void RmlUI_Toggle(void);
+void UI_SetVisible(int visible);
+int UI_IsVisible(void);
+void UI_Toggle(void);
+int UI_IsMenuVisible(void);
 
 /* Document management */
-int RmlUI_LoadDocument(const char* path);
-void RmlUI_UnloadDocument(const char* path);
-void RmlUI_ShowDocument(const char* path, int modal);
-void RmlUI_HideDocument(const char* path);
+int UI_LoadDocument(const char *path);
+void UI_UnloadDocument(const char *path);
+void UI_ShowDocument(const char *path, int modal);
+void UI_HideDocument(const char *path);
 
 /* Input events (returns 1 if consumed) */
-int RmlUI_KeyEvent(int key, int scancode, int pressed, int repeat);
-int RmlUI_CharEvent(unsigned int codepoint);
-int RmlUI_MouseMove(int x, int y, int dx, int dy);
-int RmlUI_MouseButton(int button, int pressed);
-int RmlUI_MouseScroll(float x, float y);
+int UI_KeyEvent(int key, int scancode, int pressed, int repeat);
+int UI_CharEvent(unsigned int codepoint);
+int UI_MouseMove(int x, int y, int dx, int dy);
+int UI_MouseButton(int button, int pressed);
+int UI_MouseScroll(float x, float y);
+
+/* HUD control */
+void UI_ShowHUD(const char* hud_document);
+void UI_HideHUD(void);
+int UI_IsHUDVisible(void);
+
+/* Scoreboard and intermission */
+void UI_ShowScoreboard(void);
+void UI_HideScoreboard(void);
+void UI_ShowIntermission(void);
+void UI_HideIntermission(void);
+
+/* Game state sync - call each frame from sbar.c */
+void UI_SyncGameState(const int* stats, int items,
+                      int intermission, int gametype,
+                      int maxclients,
+                      const char* level_name, const char* map_name,
+                      double game_time);
+
+/* Key capture (for rebinding UI) */
+int UI_IsCapturingKey(void);
+void UI_OnKeyCaptured(int key, const char* key_name);
+
+/* Vulkan integration */
+void UI_InitializeVulkan(const void* config);
+void UI_BeginFrame(void* cmd, int width, int height);
+void UI_EndFrame(void);
+void UI_CollectGarbage(void);
+
+/* Debug and hot reload */
+void UI_ToggleDebugger(void);
+void UI_ReloadDocuments(void);
 ```
-
-### C++ API (ui_manager.h)
-
-The C++ API mirrors the C API with `UI_` prefix instead of `RmlUI_`. The bridge layer handles type mapping between `rmlui_input_mode_t` and `ui_input_mode_t`.
 
 ## Integration Points
 
 ### Initialization (host.c)
 
 ```c
-// In Host_Init(), after VID_Init():
+// In Host_Init(), before VID_Init():
 #ifdef USE_RMLUI
-    RmlUI_Init(1280, 720, com_basedir);
-    Cvar_RegisterVariable(&ui_use_rmlui_menus);
+    UI_Init(1280, 720, com_basedir);
     Cmd_AddCommand("ui_menu", UI_Menu_f);
+    Cmd_AddCommand("ui_toggle", UI_Toggle_f);
     // ... other commands
+#endif
+
+// After VID_Init():
+#ifdef USE_RMLUI
+    UI_Resize(vid.width, vid.height);
+#endif
+```
+
+### Vulkan Setup (gl_vidsdl.c)
+
+```c
+// After Vulkan device/renderpass creation:
+#ifdef USE_RMLUI
+    ui_vulkan_config_t rmlui_config = { ... };
+    UI_InitializeVulkan(&rmlui_config);
+#endif
+
+// After GPU fence wait:
+#ifdef USE_RMLUI
+    UI_CollectGarbage();
+#endif
+```
+
+### Frame Rendering (gl_screen.c)
+
+```c
+#ifdef USE_RMLUI
+    UI_ProcessPending();   // Deferred operations (menu close, etc.)
+    UI_BeginFrame(cbx->cb, vid.width, vid.height);
+    UI_Update(host_frametime);
+    UI_Render();
+    UI_EndFrame();
 #endif
 ```
 
@@ -162,20 +226,20 @@ The C++ API mirrors the C API with `UI_` prefix instead of `RmlUI_`. The bridge 
 
 ```c
 // Key events - check input mode, exclude escape
-if (RmlUI_WantsMenuInput() && key != SDLK_ESCAPE) {
-    if (RmlUI_KeyEvent(...))
+if (UI_WantsMenuInput() && key != SDLK_ESCAPE) {
+    if (UI_KeyEvent(...))
         break;  // Consumed
 }
 
 // Mouse events - RmlUI consumes all when menu active
-if (RmlUI_WantsMenuInput()) {
-    RmlUI_MouseButton(...);
+if (UI_WantsMenuInput()) {
+    UI_MouseButton(...);
     break;
 }
 
 // Mouse motion - always update cursor, block game in menu mode
-RmlUI_MouseMove(...);
-if (RmlUI_WantsMenuInput())
+UI_MouseMove(...);
+if (UI_WantsMenuInput())
     break;
 ```
 
@@ -184,9 +248,9 @@ if (RmlUI_WantsMenuInput())
 ```c
 if (key == K_ESCAPE) {
     // RmlUI handles escape first if it has active menu
-    if (RmlUI_WantsMenuInput()) {
-        RmlUI_HandleEscape();
-        if (!RmlUI_WantsMenuInput()) {
+    if (UI_WantsMenuInput()) {
+        UI_HandleEscape();
+        if (!UI_WantsMenuInput()) {
             IN_Activate();
             key_dest = key_game;
         }
@@ -197,78 +261,37 @@ if (key == K_ESCAPE) {
     if (ui_use_rmlui_menus.value) {
         IN_Deactivate(modestate == MS_WINDOWED);
         key_dest = key_menu;
-        RmlUI_PushMenu("ui/rml/menus/main_menu.rml");
+        UI_PushMenu("ui/rml/menus/main_menu.rml");
     } else {
         M_ToggleMenu_f();  // Quake menu
     }
 }
 ```
 
-## Usage Examples
+### HUD and Game State (sbar.c)
 
-### Opening a Menu from QuakeC or Console
-
-```
-// Console
-ui_menu ui/rml/menus/options.rml
-
-// Or use default main menu
-ui_menu
-```
-
-### Enabling RmlUI Menus by Default
-
-```
-// In config.cfg or console
-ui_use_rmlui_menus 1
-
-// Now pressing Escape opens RmlUI menu instead of Quake menu
+```c
+#ifdef USE_RMLUI
+    if (ui_use_rmlui_hud.value) {
+        UI_ShowHUD(NULL);  // Default: hud_classic.rml
+        UI_SyncGameState(cl.stats, cl.items, cl.intermission,
+                         cl.gametype, cl.maxclients,
+                         cl.levelname, cl.mapname, cl.time);
+    } else {
+        UI_HideHUD();
+    }
+#endif
 ```
 
-### Creating Menu Documents
+### Disconnect Cleanup (cl_main.c)
 
-Menus are RML files (HTML-like) with RCSS styles:
-
-```html
-<!-- ui/rml/menus/main_menu.rml -->
-<rml>
-<head>
-    <link type="text/rcss" href="../rcss/menu.rcss"/>
-</head>
-<body>
-    <div id="menu">
-        <h1>Tatoosh</h1>
-        <button onclick="console('map e1m1')">New Game</button>
-        <button onclick="ui_menu ui/rml/menus/options.rml">Options</button>
-        <button onclick="quit">Quit</button>
-    </div>
-</body>
-</rml>
+```c
+#ifdef USE_RMLUI
+    UI_HideHUD();
+    UI_HideScoreboard();
+    UI_HideIntermission();
+#endif
 ```
-
-## Troubleshooting
-
-### User Can't Close Menu
-
-Check that:
-1. Escape key events are reaching `keys.c`
-2. `RmlUI_WantsMenuInput()` returns 1 when menu is active
-3. `RmlUI_HandleEscape()` properly pops the menu stack
-
-### Input Goes to Game While Menu Open
-
-Verify:
-1. `RmlUI_WantsMenuInput()` returns 1
-2. Input events in `in_sdl2.c` check mode before forwarding
-3. `key_dest` is set to `key_menu`
-
-### RmlUI Menu Doesn't Appear
-
-Check:
-1. Document path is correct
-2. `RmlUI_PushMenu()` logs success
-3. `g_visible` is set to true (automatic with `MENU_ACTIVE` mode)
-4. Vulkan render interface is initialized
 
 ## Event Handling Architecture
 
@@ -341,7 +364,7 @@ The filter must allow mouse events through when RmlUI menus are active:
 ```c
 static int IN_FilterMouseEvents(const SDL_Event *event) {
 #ifdef USE_RMLUI
-    if (RmlUI_WantsMenuInput())
+    if (UI_WantsMenuInput())
         return 1;  // Allow all events for RmlUI
 #endif
     if (event->type == SDL_MOUSEMOTION)
@@ -390,15 +413,20 @@ ui/
 │   ├── LatoLatin-Regular.ttf
 │   ├── LatoLatin-Bold.ttf
 │   ├── LatoLatin-Italic.ttf
-│   └── LatoLatin-BoldItalic.ttf
+│   ├── LatoLatin-BoldItalic.ttf
+│   ├── OpenSans.ttf
+│   └── LICENSE.txt
 ├── rcss/
-│   ├── base.rcss      # Reset, typography, colors, animations
-│   ├── menu.rcss      # Menu layouts, panels, buttons
-│   ├── hud.rcss       # HUD positioning
-│   └── widgets.rcss   # Form elements (sliders, checkboxes)
+│   ├── base.rcss        # Reset, typography, colors, animations
+│   ├── menu.rcss         # Menu layouts, panels, buttons
+│   ├── main_menu.rcss    # Main menu specific styles
+│   ├── hud.rcss          # HUD positioning
+│   └── widgets.rcss      # Form elements (sliders, checkboxes)
 └── rml/
+    ├── hud.rml
     ├── menus/
     │   ├── main_menu.rml
+    │   ├── pause_menu.rml
     │   ├── options.rml
     │   ├── options_game.rml
     │   ├── options_graphics.rml
@@ -406,7 +434,9 @@ ui/
     │   ├── options_keys.rml
     │   ├── singleplayer.rml
     │   ├── multiplayer.rml
+    │   ├── player_setup.rml
     │   ├── load_save.rml
+    │   ├── confirm_reset.rml
     │   └── quit.rml
     └── hud/
         ├── hud_classic.rml
@@ -420,13 +450,13 @@ ui/
 ### Clicks Not Registering on Buttons
 
 1. **Check mouse coordinates**: Add debug logging to `UI_MouseButton()` to verify cursor position
-2. **Verify event filter**: Ensure `IN_FilterMouseEvents` allows events when `RmlUI_WantsMenuInput()` is true
+2. **Verify event filter**: Ensure `IN_FilterMouseEvents` allows events when `UI_WantsMenuInput()` is true
 3. **Check listener lifetime**: Event listeners must be stored (RmlUI doesn't take ownership)
 
 ### Mouse Position Always (0,0)
 
 The SDL event filter is blocking `SDL_MOUSEMOTION` events. Fix:
-- Modify `IN_FilterMouseEvents()` to check `RmlUI_WantsMenuInput()`
+- Modify `IN_FilterMouseEvents()` to check `UI_WantsMenuInput()`
 - Ensure `IN_Deactivate(true)` is called to release cursor
 
 ### Menu Opens and Immediately Closes
@@ -452,13 +482,13 @@ void UI_HandleEscape() {
 
 Check that:
 1. Escape key events are reaching `keys.c`
-2. `RmlUI_WantsMenuInput()` returns 1 when menu is active
-3. `RmlUI_HandleEscape()` properly pops the menu stack
+2. `UI_WantsMenuInput()` returns 1 when menu is active
+3. `UI_HandleEscape()` properly pops the menu stack
 
 ### Input Goes to Game While Menu Open
 
 Verify:
-1. `RmlUI_WantsMenuInput()` returns 1
+1. `UI_WantsMenuInput()` returns 1
 2. Input events in `in_sdl2.c` check mode before forwarding
 3. `key_dest` is set to `key_menu`
 
@@ -466,13 +496,6 @@ Verify:
 
 Check:
 1. Document path is correct
-2. `RmlUI_PushMenu()` logs success
+2. `UI_PushMenu()` logs success
 3. `g_visible` is set to true (automatic with `MENU_ACTIVE` mode)
 4. Vulkan render interface is initialized
-
-## Future Enhancements
-
-1. **HUD Mode** - Use `RMLUI_OVERLAY` for in-game HUD that doesn't capture input
-2. **Animated Transitions** - Fade/slide between menu states
-3. **Full Menu Replacement** - Implement all Quake menu screens in RmlUI
-4. **Hot Reload** - Reload RCSS/RML without restarting game

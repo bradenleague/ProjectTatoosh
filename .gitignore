@@ -72,6 +72,9 @@ vkQuake.cfg
 .claude/*
 !.claude/skills/
 
+# Misc
+history.txt
+
 # Debug files
 *.dSYM/
 *.pdb

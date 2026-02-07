@@ -78,6 +78,7 @@ rmlui/
     ├── render_interface_vk   Custom Vulkan renderer (pipelines, buffers, textures)
     ├── system_interface      Time/logging/clipboard bridge to engine
     ├── game_data_model       Sync Quake game state → RmlUI data bindings
+    ├── notification_model    Centerprint + notify line bindings with expiry
     ├── cvar_binding          Two-way sync between cvars and UI elements
     ├── menu_event_handler    Handle menu clicks, parse action strings
     ├── quake_cvar_provider   ICvarProvider implementation
@@ -106,6 +107,31 @@ Assembled by `make assemble`, gitignored:
 - `game/tatoosh/progs.dat` → copied from `tatoosh/progs.dat` when present
 - Engine writes `vkQuake.cfg` into `game/tatoosh/`, never into the source tree
 
+### UI Assets (`ui/`)
+
+```
+ui/
+  rml/
+    hud/             3 HUD variants (modern, classic, simple) + scoreboard, intermission
+    menus/           9 menu documents (main_menu, pause_menu, options, load_save, etc.)
+  rcss/              Stylesheets (base.rcss, hud.rcss, menu.rcss, widgets.rcss, etc.)
+  fonts/             Lato, OpenSans, SpaceGrotesk
+```
+
+### HUD & Data Binding
+
+The "game" data model syncs Quake state to RML documents each frame:
+
+- **Engine → `UI_SyncGameState()`** populates `GameState` struct (health, armor, ammo, weapons, items, level stats)
+- **`GameDataModel`** exposes 50+ bindings: direct (`{{ health }}`) and computed (`{{ weapon_label }}` via `BindFunc` lambdas)
+- **`NotificationModel`** adds centerprint + 4 rolling notify lines with visibility/expiry tracking
+
+HUD variants: `hud_modern.rml` (corner-based with bracket frames), `hud_classic.rml` (traditional bottom bar), `hud.rml` (minimal)
+
+### Rendering Pipeline
+
+UI renders to a **separate texture**, composited by `postprocess.frag` with barrel warp + chromatic aberration. Bright white UI elements get GMUNK-style color fringing naturally from the compositing chain. Push constants `ui_offset_x`/`ui_offset_y` enable HUD inertia effects (jump bounce, camera sway).
+
 ### Mod Sources (`tatoosh/`)
 
 QuakeC source (`tatoosh/qcsrc/`, 38 files) and game configs. Source of truth — copied into `game/` at assemble time.
@@ -130,6 +156,8 @@ When modifying engine code, all UI hooks are behind `#ifdef USE_RMLUI`:
 | `ui_toggle` | Toggle UI visibility |
 | `ui_closemenu` | Close all menus |
 | `ui_debugger` | Toggle RmlUI visual debugger |
+| `ui_reload` | Hot reload all RML + RCSS from disk (clears document cache) |
+| `ui_reload_css` | Lightweight RCSS-only reload (preserves DOM and data bindings) |
 
 ## Code Conventions
 

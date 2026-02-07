@@ -26,27 +26,27 @@
 
 .hud-top-left {
     position: absolute;
-    top: 24dp;
-    left: 24dp;
+    top: 48dp;
+    left: 48dp;
 }
 
 .hud-top-center {
     position: absolute;
-    top: 24dp;
+    top: 48dp;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .hud-top-right {
     position: absolute;
-    top: 24dp;
-    right: 24dp;
+    top: 48dp;
+    right: 48dp;
 }
 
 .hud-center-left {
     position: absolute;
     top: 50%;
-    left: 24dp;
+    left: 48dp;
     transform: translateY(-50%);
 }
 
@@ -60,27 +60,27 @@
 .hud-center-right {
     position: absolute;
     top: 50%;
-    right: 24dp;
+    right: 48dp;
     transform: translateY(-50%);
 }
 
 .hud-bottom-left {
     position: absolute;
-    bottom: 24dp;
-    left: 24dp;
+    bottom: 48dp;
+    left: 48dp;
 }
 
 .hud-bottom-center {
     position: absolute;
-    bottom: 24dp;
+    bottom: 48dp;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .hud-bottom-right {
     position: absolute;
-    bottom: 24dp;
-    right: 24dp;
+    bottom: 48dp;
+    right: 48dp;
 }
 
 /* ============================================
@@ -800,6 +800,8 @@
     display: flex;
     flex-direction: column;
     gap: 4dp;
+    min-height: 140dp;
+    justify-content: flex-end;
 }
 
 .corner-stat {
@@ -837,6 +839,18 @@
 
 .hud-modern .corner-stats.hud-bottom-right {
     align-items: flex-end;
+}
+
+.hud-modern .hud-bottom-right .corner-stat {
+    justify-content: flex-end;
+}
+
+.hud-modern .hud-bottom-right .ammo-reserves {
+    justify-content: flex-end;
+}
+
+.hud-modern .hud-bottom-right .cluster-divider {
+    margin-left: auto;
 }
 
 .crosshair-minimal {
@@ -913,29 +927,152 @@
 
 .hud-modern .level-info {
     position: absolute;
-    top: 72dp;
-    left: 24dp;
+    top: 96dp;
+    left: 48dp;
+}
+
+/* --- Cluster content wrapper --- */
+
+.cluster-content {
+    display: block;
+}
+
+.cluster-content.right {
+    text-align: right;
 }
 
 /* --- Hairline divider between stat groups --- */
 
 .cluster-divider {
     width: 48dp;
-    height: 1dp;
+    height: 2dp;
     background-color: #666666;
     margin-top: 6dp;
     margin-bottom: 6dp;
 }
 
+/* --- Bracket frames (L-shaped corners) --- */
+
+.bracket-frame {
+    position: absolute;
+    top: -10dp;
+    bottom: -160dp;
+    width: 16dp;
+}
+
+.bracket-frame.left {
+    left: -20dp;
+}
+
+.bracket-frame.right {
+    right: -20dp;
+}
+
+.bracket-corner {
+    position: absolute;
+    width: 16dp;
+    height: 16dp;
+}
+
+.bracket-corner.tl {
+    top: 0;
+    left: 0;
+    border-top: 3dp #555555;
+    border-left: 3dp #555555;
+}
+
+.bracket-corner.bl {
+    bottom: 0;
+    left: 0;
+    border-bottom: 3dp #555555;
+    border-left: 3dp #555555;
+}
+
+.bracket-corner.tr {
+    top: 0;
+    right: 0;
+    border-top: 3dp #555555;
+    border-right: 3dp #555555;
+}
+
+.bracket-corner.br {
+    bottom: 0;
+    right: 0;
+    border-bottom: 3dp #555555;
+    border-right: 3dp #555555;
+}
+
+/* --- Armor type color coding --- */
+
+.corner-stat.armor-green .value { color: #44cc66; }
+.corner-stat.armor-green .label { color: #338850; }
+
+.corner-stat.armor-yellow .value { color: #ccbb44; }
+.corner-stat.armor-yellow .label { color: #998833; }
+
+.corner-stat.armor-red .value { color: #cc4444; }
+.corner-stat.armor-red .label { color: #993333; }
+
 /* --- Weapon readout (contextual label above ammo) --- */
 
 .weapon-readout {
-    font-size: 12dp;
-    color: #555555;
+    font-family: Space Grotesk;
+    font-size: 18dp;
+    color: #666666;
     text-transform: uppercase;
-    letter-spacing: 2dp;
+    letter-spacing: 3dp;
     margin-bottom: 4dp;
 }
+
+.hud-modern .hud-bottom-right .weapon-readout {
+    text-align: right;
+}
+
+/* --- Ammo reserves strip --- */
+
+.ammo-reserves {
+    display: flex;
+    flex-direction: row;
+    gap: 16dp;
+    margin-top: 8dp;
+    padding-top: 8dp;
+    border-top: 2dp #333333;
+}
+
+.reserve-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 36dp;
+}
+
+.reserve-value {
+    font-family: Space Grotesk;
+    font-size: 18dp;
+    color: #444444;
+}
+
+.reserve-label {
+    font-family: Space Grotesk;
+    font-size: 11dp;
+    color: #333333;
+    letter-spacing: 1dp;
+}
+
+/* Active ammo type highlight colors */
+.reserve-col.active .reserve-value { color: #cc9933; }
+.reserve-col.active .reserve-label { color: #996622; }
+
+/* Override per ammo type when active — use nth-child since
+   the columns are always in SHL/NLS/RKT/CLS order */
+.ammo-reserves .reserve-col:nth-child(2).active .reserve-value { color: #999999; }
+.ammo-reserves .reserve-col:nth-child(2).active .reserve-label { color: #666666; }
+
+.ammo-reserves .reserve-col:nth-child(3).active .reserve-value { color: #ff5533; }
+.ammo-reserves .reserve-col:nth-child(3).active .reserve-label { color: #aa3322; }
+
+.ammo-reserves .reserve-col:nth-child(4).active .reserve-value { color: #44bbee; }
+.ammo-reserves .reserve-col:nth-child(4).active .reserve-label { color: #227799; }
 
 /* ============================================
    Centerprint - CENTER SCREEN MESSAGES
@@ -961,8 +1098,8 @@
 
 .notify-area {
     position: absolute;
-    top: 100dp;
-    left: 24dp;
+    top: 124dp;
+    left: 48dp;
     width: 500dp;
 }
 

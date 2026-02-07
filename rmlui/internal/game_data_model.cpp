@@ -139,6 +139,64 @@ bool GameDataModel::Initialize(Rml::Context* context)
     constructor.Bind("face_index", &g_game_state.face_index);
     constructor.Bind("face_pain", &g_game_state.face_pain);
 
+    // Computed: weapon label from active_weapon bitflag
+    constructor.BindFunc("weapon_label",
+        [](Rml::Variant& variant) {
+            switch (g_game_state.active_weapon) {
+                case 4096: variant = Rml::String("AXE"); break;
+                case 1:    variant = Rml::String("SHOTGUN"); break;
+                case 2:    variant = Rml::String("SUPER SHOTGUN"); break;
+                case 4:    variant = Rml::String("NAILGUN"); break;
+                case 8:    variant = Rml::String("SUPER NAILGUN"); break;
+                case 16:   variant = Rml::String("GRENADE L."); break;
+                case 32:   variant = Rml::String("ROCKET L."); break;
+                case 64:   variant = Rml::String("LIGHTNING"); break;
+                default:   variant = Rml::String(""); break;
+            }
+        });
+
+    // Computed: ammo type label
+    constructor.BindFunc("ammo_type_label",
+        [](Rml::Variant& variant) {
+            switch (g_game_state.active_weapon) {
+                case 1:  case 2:  variant = Rml::String("SHELLS"); break;
+                case 4:  case 8:  variant = Rml::String("NAILS"); break;
+                case 16: case 32: variant = Rml::String("ROCKETS"); break;
+                case 64:          variant = Rml::String("CELLS"); break;
+                default:          variant = Rml::String(""); break;
+            }
+        });
+
+    // Computed: is_axe (hide ammo display when wielding axe)
+    constructor.BindFunc("is_axe",
+        [](Rml::Variant& variant) {
+            variant = (g_game_state.active_weapon == 4096);
+        });
+
+    // Computed: active ammo type booleans for reserves highlight
+    constructor.BindFunc("is_shells_weapon",
+        [](Rml::Variant& variant) {
+            int w = g_game_state.active_weapon;
+            variant = (w == 1 || w == 2);
+        });
+
+    constructor.BindFunc("is_nails_weapon",
+        [](Rml::Variant& variant) {
+            int w = g_game_state.active_weapon;
+            variant = (w == 4 || w == 8);
+        });
+
+    constructor.BindFunc("is_rockets_weapon",
+        [](Rml::Variant& variant) {
+            int w = g_game_state.active_weapon;
+            variant = (w == 16 || w == 32);
+        });
+
+    constructor.BindFunc("is_cells_weapon",
+        [](Rml::Variant& variant) {
+            variant = (g_game_state.active_weapon == 64);
+        });
+
     // Register notification bindings on the same "game" model
     NotificationModel::RegisterBindings(constructor);
 

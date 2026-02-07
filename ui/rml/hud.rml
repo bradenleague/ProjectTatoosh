@@ -21,7 +21,7 @@
 
     <!-- Weapon info -->
     <div id="weapon-info">
-      <span id="weapon-name">{{ weapon_name }}</span>
+      <span id="weapon-name">{{ weapon_label }}</span>
     </div>
 
     <!-- Status bar -->

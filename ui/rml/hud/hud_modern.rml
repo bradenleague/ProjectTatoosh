@@ -11,21 +11,56 @@
 
     <!-- Health/Armor (bottom-left) -->
     <div class="corner-stats hud-bottom-left">
-        <div class="corner-stat health" data-class-low="health < 25">
-            <span class="value">{{ health }}</span>
-            <span class="label">HEALTH</span>
+        <div class="bracket-frame left">
+            <div class="bracket-corner tl"></div>
+            <div class="bracket-corner bl"></div>
         </div>
-        <div class="cluster-divider"></div>
-        <div class="corner-stat armor" data-if="armor > 0">
-            <span class="value">{{ armor }}</span>
-            <span class="label">ARMOR</span>
+        <div class="cluster-content">
+            <div class="corner-stat health" data-class-low="health < 25">
+                <span class="value">{{ health }}</span>
+                <span class="label">HEALTH</span>
+            </div>
+            <div class="cluster-divider"></div>
+            <div class="corner-stat armor" data-if="armor > 0"
+                 data-class-armor-green="armor_type == 1"
+                 data-class-armor-yellow="armor_type == 2"
+                 data-class-armor-red="armor_type == 3">
+                <span class="value">{{ armor }}</span>
+                <span class="label">ARMOR</span>
+            </div>
         </div>
     </div>
 
-    <!-- Ammo (bottom-right) -->
+    <!-- Weapon/Ammo (bottom-right) -->
     <div class="corner-stats hud-bottom-right">
-        <div class="corner-stat ammo" data-class-low="ammo < 10">
-            <span class="value">{{ ammo }}</span>
+        <div class="cluster-content right">
+            <div class="weapon-readout">{{ weapon_label }}</div>
+            <div class="corner-stat ammo" data-class-low="ammo < 10" data-if="!is_axe">
+                <span class="label">{{ ammo_type_label }}</span>
+                <span class="value">{{ ammo }}</span>
+            </div>
+            <div class="ammo-reserves" data-if="!is_axe">
+                <div class="reserve-col" data-class-active="is_shells_weapon">
+                    <span class="reserve-value">{{ shells }}</span>
+                    <span class="reserve-label">SHL</span>
+                </div>
+                <div class="reserve-col" data-class-active="is_nails_weapon">
+                    <span class="reserve-value">{{ nails }}</span>
+                    <span class="reserve-label">NLS</span>
+                </div>
+                <div class="reserve-col" data-class-active="is_rockets_weapon">
+                    <span class="reserve-value">{{ rockets }}</span>
+                    <span class="reserve-label">RKT</span>
+                </div>
+                <div class="reserve-col" data-class-active="is_cells_weapon">
+                    <span class="reserve-value">{{ cells }}</span>
+                    <span class="reserve-label">CLS</span>
+                </div>
+            </div>
+        </div>
+        <div class="bracket-frame right">
+            <div class="bracket-corner tr"></div>
+            <div class="bracket-corner br"></div>
         </div>
     </div>
 

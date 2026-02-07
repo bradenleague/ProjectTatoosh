@@ -620,6 +620,7 @@ void() PutClientInServer =
 	self.land_recovery_time = 0;
 	self.land_speed_scale = 1;
 	self.is_sprinting = FALSE;
+	self.base_fov = 0;
 
 	spot = SelectSpawnPoint ();
 
@@ -1227,14 +1228,18 @@ void() PlayerPreThink =
 		{
 			self.is_sprinting = FALSE;
 			self.maxspeed = cvar("sv_maxspeed");
-			stuffcmd(self, "fov 90\n");
+			stuffcmd(self, "fov ");
+			stuffcmd(self, ftos(self.base_fov));
+			stuffcmd(self, "\n");
 			self.attack_finished = time + 0.2;
 		}
 		else if (self.deadflag || self.waterlevel >= 2 || hspeed_sprint < 80)
 		{
 			self.is_sprinting = FALSE;
 			self.maxspeed = cvar("sv_maxspeed");
-			stuffcmd(self, "fov 90\n");
+			stuffcmd(self, "fov ");
+			stuffcmd(self, ftos(self.base_fov));
+			stuffcmd(self, "\n");
 		}
 		else
 		{

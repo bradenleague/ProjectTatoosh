@@ -15,6 +15,9 @@ GAMEDIR := game
 ID1_LINK_TARGET := ../external/assets/id1
 UI_LINK_TARGET := ../ui
 
+QC_SRC := $(wildcard tatoosh/qcsrc/*.qc)
+FTEQCC := $(if $(filter Darwin,$(shell uname -s)),tools/fteqcc,tools/fteqcc64)
+
 .PHONY: all libs engine run clean distclean setup meson-setup assemble check-submodules
 
 # --- Submodule guard ---
@@ -76,7 +79,16 @@ assemble:
 	done
 	@test -f tatoosh/progs.dat && cp tatoosh/progs.dat $(GAMEDIR)/tatoosh/progs.dat || true
 
-run: all assemble
+# --- QuakeC compilation (skipped if fteqcc not installed) ---
+tatoosh/progs.dat: $(QC_SRC)
+	@if [ -x "$(FTEQCC)" ]; then \
+		echo "Compiling QuakeC..."; \
+		cd tatoosh/qcsrc && ../../$(FTEQCC); \
+	else \
+		echo "Note: fteqcc not found, skipping QuakeC compilation"; \
+	fi
+
+run: all tatoosh/progs.dat assemble
 	./engine/build/vkquake -basedir $(GAMEDIR) -game tatoosh
 
 setup:

@@ -579,6 +579,7 @@ float		teamplay;
 .float		land_recovery_time;
 .float		land_speed_scale;
 .float		is_sprinting;
+.float		base_fov;		// saved FOV before sprint
 .float		swim_flag;		// player swimming sound flag
 .float		air_finished;	// when time > air_finished, start drowning
 .float		bubble_count;	// keeps track of the number of bubbles

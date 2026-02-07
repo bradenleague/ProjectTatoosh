@@ -1483,7 +1483,10 @@ void() ImpulseCommands =
 			{
 				self.is_sprinting = TRUE;
 				self.maxspeed = cvar("sv_maxspeed") * 1.5;
-				stuffcmd(self, "fov 95\n");
+				self.base_fov = cvar("fov");
+				stuffcmd(self, "fov ");
+				stuffcmd(self, ftos(self.base_fov + 5));
+				stuffcmd(self, "\n");
 			}
 			break;
 		}
@@ -1492,7 +1495,9 @@ void() ImpulseCommands =
 			{
 				self.is_sprinting = FALSE;
 				self.maxspeed = cvar("sv_maxspeed");
-				stuffcmd(self, "fov 90\n");
+				stuffcmd(self, "fov ");
+				stuffcmd(self, ftos(self.base_fov));
+				stuffcmd(self, "\n");
 			}
 			break;
 

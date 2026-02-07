@@ -53,7 +53,8 @@ int UI_IsMenuVisible(void);
 void UI_ToggleDebugger(void);
 
 /* Hot reload support (if enabled) */
-void UI_ReloadDocuments(void);
+void UI_ReloadDocuments(void);     /* Full reload: re-loads RML + RCSS from disk */
+void UI_ReloadStyleSheets(void);   /* Lightweight: re-loads only RCSS styles */
 
 /* Input mode control */
 void UI_SetInputMode(ui_input_mode_t mode);

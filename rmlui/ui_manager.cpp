@@ -810,6 +810,10 @@ void UI_ReloadDocuments(void)
 
     Con_Printf("UI_ReloadDocuments: Reloading all documents\n");
 
+    // Clear caches so RmlUI re-reads files from disk
+    Rml::Factory::ClearStyleSheetCache();
+    Rml::Factory::ClearTemplateCache();
+
     // Store visibility state and reload each document
     for (auto& pair : g_documents) {
         if (pair.second) {
@@ -827,8 +831,29 @@ void UI_ReloadDocuments(void)
             }
         }
     }
+
+    Con_Printf("UI_ReloadDocuments: Done\n");
 #else
     Con_Printf("UI_ReloadDocuments: Hot reload not enabled\n");
+#endif
+}
+
+void UI_ReloadStyleSheets(void)
+{
+#ifdef TATOOSH_HOT_RELOAD
+    if (!g_initialized || !g_context) return;
+
+    Con_Printf("UI_ReloadStyleSheets: Reloading stylesheets\n");
+
+    for (auto& pair : g_documents) {
+        if (pair.second) {
+            pair.second->ReloadStyleSheet();
+        }
+    }
+
+    Con_Printf("UI_ReloadStyleSheets: Done\n");
+#else
+    Con_Printf("UI_ReloadStyleSheets: Hot reload not enabled\n");
 #endif
 }
 
